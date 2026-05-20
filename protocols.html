@@ -1,0 +1,1991 @@
+<!DOCTYPE html>
+<!-- saved from url=(0053)file:///Users/mkant/Downloads/circady_overview_3.html -->
+<html lang="de"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>circady — Recovery-Cycle Matrix</title>
+<link rel="icon" type="image/png" href="assets/favicon-64.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+:root {
+  --bg: #f7f5f0;
+  --bg-deep: #efece5;
+  --ink: #1a1a1a;
+  --ink-soft: #4a4a47;
+  --ink-faint: #8a8a85;
+  --rule: #d8d4c8;
+  --rule-soft: #e8e4d8;
+  --accent: #2f6a45;
+  --highlight: #f3e8b3;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100vh;
+  background-image:
+    radial-gradient(circle at 100% 0%, rgba(47, 106, 69, 0.06) 0%, transparent 35%),
+    radial-gradient(circle at 0% 100%, rgba(47, 106, 69, 0.04) 0%, transparent 40%);
+}
+
+/* === Header === */
+header {
+  padding: 48px 48px 32px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--bg);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.brand h1 {
+  font-family: 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 200;
+  font-size: 48px;
+  letter-spacing: 0.12em;
+  line-height: 1;
+}
+
+.brand .accent {
+  color: var(--accent);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.brand .subtitle {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.lang-switcher {
+  margin-left: auto;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+.lang-btn {
+  padding: 5px 10px;
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink-faint);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+  border-radius: 2px;
+  transition: all 0.15s ease;
+}
+.lang-btn:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+.lang-btn.active {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+
+.meta-line {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.meta-line span strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+/* === Loading === */
+.loading {
+  padding: 96px 48px;
+  text-align: center;
+}
+
+.loading-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  margin: 0 3px;
+  animation: pulse 1.4s infinite ease-in-out both;
+}
+.loading-dot:nth-child(1) { animation-delay: -0.32s; }
+.loading-dot:nth-child(2) { animation-delay: -0.16s; }
+@keyframes pulse {
+  0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+.error {
+  padding: 96px 48px;
+  text-align: center;
+  color: var(--accent);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 12px;
+}
+
+/* === Matrix container === */
+.matrix-wrap {
+  padding: 32px 0 96px;
+  overflow-x: auto;
+  overflow-y: visible;
+}
+
+.matrix {
+  display: grid;
+  min-width: max-content;
+  margin: 0 48px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+/* Header row */
+.matrix-corner {
+  background: var(--bg-deep);
+  padding: 16px 20px;
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  display: flex;
+  align-items: center;
+  position: sticky;
+  left: 0;
+  top: 0;
+  z-index: 4;
+  min-width: 160px;
+}
+
+.fw-header {
+  background: var(--bg-deep);
+  padding: 16px 18px;
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  min-width: 240px;
+  max-width: 260px;
+  vertical-align: top;
+}
+
+/* === Collapse toggle button === */
+.collapse-toggle {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--rule);
+  background: var(--bg);
+  border-radius: 3px;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--ink-faint);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  z-index: 3;
+  transition: all 0.15s ease;
+}
+.collapse-toggle:hover {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+
+/* === Collapsed framework header === */
+.fw-header.collapsed {
+  min-width: 44px;
+  max-width: 44px;
+  padding: 36px 4px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+.fw-header.collapsed .fw-subtitle {
+  display: none;
+}
+.fw-header.collapsed .fw-name {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: 14px;
+  line-height: 1;
+  white-space: nowrap;
+  margin: 0;
+  max-height: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fw-header.collapsed .collapse-toggle {
+  top: 8px;
+  right: 50%;
+  transform: translateX(50%);
+}
+
+/* === Collapsed cell === */
+.cell.collapsed {
+  min-width: 44px;
+  max-width: 44px;
+  padding: 0;
+}
+.cell.collapsed > * {
+  display: none;
+}
+
+.fw-header:last-child { border-right: none; }
+
+.fw-name {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+}
+
+.fw-kind {
+  display: inline-block;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 2px;
+  margin-bottom: 6px;
+}
+
+.fw-kind[data-kind="protocol"] { background: rgba(47, 106, 69, 0.08); color: var(--accent); }
+.fw-kind[data-kind="exemplary"] { background: rgba(20, 80, 40, 0.08); color: #2a5a3a; }
+
+.fw-subtitle {
+  font-size: 11px;
+  color: var(--ink-faint);
+  line-height: 1.35;
+}
+
+/* Pillar (left column) */
+.pillar-cell {
+  background: var(--bg-deep);
+  padding: 20px 20px;
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  min-width: 160px;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: -0.01em;
+}
+
+.pillar-cell .pillar-de {
+  display: block;
+}
+
+.pillar-cell .pillar-en {
+  display: block;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-top: 4px;
+}
+
+/* Cell (data) */
+.cell {
+  padding: 12px;
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cell:last-child { border-right: none; }
+
+.cell-empty {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 10px;
+  color: var(--ink-faint);
+  opacity: 0.4;
+  text-align: center;
+  padding-top: 16px;
+}
+
+/* === Pills === */
+.pill {
+  border-radius: 6px;
+  padding: 8px 11px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 1px solid;
+  user-select: none;
+}
+
+.pill:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.pill-name {
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 1.25;
+}
+
+.pill-id {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  opacity: 0.65;
+  margin-top: 2px;
+}
+
+.pill-cycle-tag {
+  display: inline-block;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 1px 5px;
+  border-radius: 2px;
+  margin-top: 6px;
+  background: rgba(0,0,0,0.06);
+  opacity: 0.75;
+}
+
+/* Expanded pill */
+.pill.expanded {
+  cursor: default;
+  padding: 14px 16px;
+}
+
+.pill-details {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0,0,0,0.12);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.pill-section {
+  margin-top: 8px;
+}
+
+.pill-section:first-child { margin-top: 0; }
+
+.pill-section h4 {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-bottom: 3px;
+}
+
+.pill-section p {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.pill-section strong {
+  font-weight: 600;
+}
+
+.timing-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 12px;
+  font-size: 11px;
+  margin-top: 6px;
+}
+
+.timing-grid dt {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 10px;
+  opacity: 0.65;
+  white-space: nowrap;
+}
+
+.timing-grid dd {
+  font-weight: 500;
+}
+
+.healthkit-tag {
+  display: inline-block;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 9px;
+  padding: 2px 6px;
+  background: rgba(0,0,0,0.1);
+  border-radius: 2px;
+  margin-top: 4px;
+}
+
+/* === Reference category gets special treatment - hide from matrix === */
+.cell.reference-cell {
+  display: none;
+}
+
+/* === Footer === */
+footer {
+  padding: 24px 48px 48px;
+  border-top: 1px solid var(--rule);
+  background: var(--bg);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+footer a:hover { text-decoration: underline; }
+
+@media (max-width: 768px) {
+  header { padding: 24px 20px 16px; }
+  .matrix { margin: 0 20px; }
+  .brand h1 { font-size: 32px; }
+  .meta-line { gap: 16px; font-size: 11px; }
+  footer { padding: 16px 20px 32px; }
+}
+</style>
+<style>
+/* === Chrome an die Startseite (index.html) angleichen === */
+header.site-header { padding: 0; }
+.site-header .brand { align-items: center; gap: 10px; }
+footer.site-footer {
+  display: block;
+  padding: 52px 0 40px;
+  font-family: var(--font);
+  font-size: 17px;
+  letter-spacing: normal;
+  color: var(--ink);
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav" aria-label="Main">
+    <a class="brand" href="index.html" aria-label="circady — home">
+      <img src="assets/app-icon.png" alt="">
+      <span class="brand-name">circady</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html#features" data-i18n="nav.features">Features</a></li>
+      <li><a href="protocols.html" data-i18n="nav.protocols">Protocols</a></li>
+      <li><a href="support.html" data-i18n="nav.support">Support</a></li>
+    </ul>
+    <div class="nav-right">
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button class="lang-btn" type="button" data-lang="de">DE</button>
+        <button class="lang-btn" type="button" data-lang="en">EN</button>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<section class="page-hero">
+  <div class="container">
+    <span class="eyebrow" data-i18n="protocols.eyebrow">Where science becomes routine</span>
+    <h1 data-i18n="protocols.title" style="margin-top:14px">The Protocol Library</h1>
+    <p class="lead" data-i18n="protocols.lead" style="max-width:680px;margin:18px 0 26px">Curated protocols, mapped across six life areas and 254 routine recommendations.</p>
+    <div class="meta-line" id="meta">
+      <span><strong>20</strong> Protocols</span>
+      <span><strong>74</strong> Routines</span>
+      <span><strong>254</strong> Endorsements</span>
+      <span><strong>v6.2.0</strong> · Schema 5.0.0</span>
+      <span>Stand: <strong>2026-05-18</strong></span>
+    </div>
+  </div>
+</section>
+
+<main id="app"><div class="matrix-wrap"><div class="matrix" style="grid-template-columns: 160px repeat(20, minmax(240px, 260px));"><div class="matrix-corner">Pillar / Protocol</div><div class="fw-header" data-fw-id="bryan_johnson" style="border-top-color: rgb(83, 74, 183);">
+      <button class="collapse-toggle" type="button" aria-label="Spalte einklappen">−</button>
+      <div class="fw-name" style="color: #3C3489;">Bryan J.</div>
+      <div class="fw-subtitle">Selbstexperimentelles Longevity-Protokoll</div>
+    </div><div class="fw-header" data-fw-id="attia" style="border-top-color: rgb(24, 95, 165);">
+      <button class="collapse-toggle" type="button" aria-label="Spalte einklappen">−</button>
+      <div class="fw-name" style="color: #0C447C;">Attia</div>
+      <div class="fw-subtitle">Trainieren wie ein Athlet — Vier-Säulen-Modell</div>
+    </div><div class="fw-header" data-fw-id="blue_zones" style="border-top-color: rgb(15, 110, 86);">
+      <button class="collapse-toggle" type="button" aria-label="Spalte einklappen">−</button>
+      <div class="fw-name" style="color: #085041;">Buettner</div>
+      <div class="fw-subtitle">Langlebigkeit-Regionen — was Hundertjährige tun</div>
+    </div><div class="fw-header" data-fw-id="sinclair" style="border-top-color: rgb(153, 53, 86);">
+      <button class="collapse-toggle" type="button" aria-label="Spalte einklappen">−</button>
+      <div class="fw-name" style="color: #72243E;">Sinclair</div>
+      <div class="fw-subtitle">Informationstheorie des Alterns</div>
+    </div><div class="fw-header" data-fw-id="longo" style="border-top-color: rgb(59, 109, 17);">
+      <button class="collapse-toggle" type="button" aria-label="Spalte einklappen">−</button>
+      <div class="fw-name" style="color: #27500A;">Longo</div>
+      <div class="fw-subtitle">Pescetarisch-mediterran + periodisches Scheinfasten</div>
+    </div><div class="fw-header" data-fw-id="ornish" style="border-top-color: rgb(153, 60, 29);">
+      <button class="collapse-toggle" type="button" aria-label="Spalte einklappen">−</button>
+      <div class="fw-name" style="color: #712B13;">Ornish</div>
+      <div class="fw-subtitle">Lifestyle-basierte Krankheitsumkehr</div>
+    </div><div class="fw-header" data-fw-id="aclm" style="border-top-color: rgb(163, 45, 45);">
+      <button class="collapse-toggle" type="button" aria-label="Spalte einklappen">−</button>
+      <div class="fw-name" style="color: #791F1F;">ACLM</div>
+      <div class="fw-subtitle">Sechs Säulen evidenzbasierter Leitlinien</div>
+    </div><div class="fw-header" data-fw-id="nippard" style="border-top-color: rgb(171, 126, 15);">
+      <button class="collapse-toggle" type="button" aria-label="Spalte einklappen">−</button>
+      <div class="fw-name" style="color: #6E5208;">Nippard</div>
+      <div class="fw-subtitle">Wissenschaftsbasierter Muskelaufbau (PPL, Volumen-Landmarks)</div>
+    </div><div class="fw-header" data-fw-id="cavaliere" style="border-top-color: rgb(30, 64, 175);">
+      <button class="collapse-toggle" type="button" aria-label="Spalte einklappen">−</button>
+      <div class="fw-name" style="color: #1E3A5F;">Cavaliere</div>
+      <div class="fw-subtitle">Athletisches Training, Injury-Prevention, 45-Min-Sessions</div>
+    </div><div class="fw-header" data-fw-id="nina_ruge" style="border-top-color: rgb(184, 87, 99);">
+      <button class="collapse-toggle" type="button" aria-label="Spalte einklappen">−</button>
+      <div class="fw-name" style="color: #7A3540;">Ruge</div>
+      <div class="fw-subtitle">Ernährung, Sport, Schlaf, Stress, Supplemente</div>
+    </div><div class="fw-header" data-fw-id="hems" style="border-top-color: rgb(30, 90, 140);">
+      <button class="collapse-toggle" type="button" aria-label="Spalte einklappen">−</button>
+      <div class="fw-name" style="color: #13456A;">Hems</div>
+      <div class="fw-subtitle">5-Säulen, evidenzbasiert, minimal Supplemente</div>
+    </div><div class="fw-header" data-fw-id="doc_felix" style="border-top-color: rgb(107, 142, 35);">
+      <button class="collapse-toggle" type="button" aria-label="Spalte einklappen">−</button>
+      <div class="fw-name" style="color: #4A6B17;">Doc Felix</div>
+      <div class="fw-subtitle">Allgemeinmedizin: Stress, Hormone, Fettverbrennung</div>
+    </div><div class="fw-header" data-fw-id="lyon" style="border-top-color: rgb(163, 62, 62);">
+      <button class="collapse-toggle" type="button" aria-label="Spalte einklappen">−</button>
+      <div class="fw-name" style="color: #6E2828;">Lyon</div>
+      <div class="fw-subtitle">Muskel als Organ der Langlebigkeit</div>
+    </div><div class="fw-header" data-fw-id="brecka" style="border-top-color: rgb(184, 106, 31);">
+      <button class="collapse-toggle" type="button" aria-label="Spalte einklappen">−</button>
+      <div class="fw-name" style="color: #7C4612;">Brecka</div>
+      <div class="fw-subtitle">Methylierungs-Genetik, Atemarbeit, Cold/Heat</div>
+    </div><div class="fw-header" data-fw-id="diamandis" style="border-top-color: rgb(92, 58, 140);">
+      <button class="collapse-toggle" type="button" aria-label="Spalte einklappen">−</button>
+      <div class="fw-name" style="color: #3F2563;">Diamandis</div>
+      <div class="fw-subtitle">Diagnostik, Exponential Tech, Frontier Interventions</div>
+    </div><div class="fw-header" data-fw-id="love" style="border-top-color: rgb(74, 138, 138);">
+      <button class="collapse-toggle" type="button" aria-label="Spalte einklappen">−</button>
+      <div class="fw-name" style="color: #2F5C5C;">Love</div>
+      <div class="fw-subtitle">Neuroprotektive Diät, Memory-Schutz</div>
+    </div><div class="fw-header" data-fw-id="huberman" style="border-top-color: rgb(44, 76, 95);">
+      <button class="collapse-toggle" type="button" aria-label="Spalte einklappen">−</button>
+      <div class="fw-name" style="color: #1A3040;">Huberman</div>
+      <div class="fw-subtitle">Stanford-Neurowissenschaftler: Schlaf, Licht, Atem, Training</div>
+    </div><div class="fw-header" data-fw-id="muscle_building_1" style="border-top-color: rgb(133, 79, 11);">
+      <button class="collapse-toggle" type="button" aria-label="Spalte einklappen">−</button>
+      <div class="fw-name" style="color: #633806;">Muskelaufbau 1</div>
+      <div class="fw-subtitle">Hypertrophie — Ganzkörper-Training (3×/Woche)</div>
+    </div><div class="fw-header" data-fw-id="muscle_building_2" style="border-top-color: rgb(133, 79, 11);">
+      <button class="collapse-toggle" type="button" aria-label="Spalte einklappen">−</button>
+      <div class="fw-name" style="color: #633806;">Muskelaufbau 2</div>
+      <div class="fw-subtitle">Hypertrophie — 2er-Split (Push+Bauch / Pull+Beine)</div>
+    </div><div class="fw-header" data-fw-id="muscle_building_3" style="border-top-color: rgb(133, 79, 11);">
+      <button class="collapse-toggle" type="button" aria-label="Spalte einklappen">−</button>
+      <div class="fw-name" style="color: #633806;">Muskelaufbau 3</div>
+      <div class="fw-subtitle">Hypertrophie — 3er-Split (Push / Pull / Legs)</div>
+    </div><div class="pillar-cell">
+      <span class="pillar-de">Bewegung</span>
+      <span class="pillar-en">Movement</span>
+    </div><div class="cell" data-fw-id="bryan_johnson"><div class="pill" style="background: rgb(238, 237, 254); border-color: rgba(83, 74, 183, 0.333); color: rgb(60, 52, 137);">
+    <div class="pill-name">Krafttraining</div>
+    <div class="pill-id">krafttraining</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill expanded" style="background: rgb(238, 237, 254); border-color: rgba(83, 74, 183, 0.333); color: rgb(60, 52, 137);">
+    <div class="pill-name">HIIT</div>
+    <div class="pill-id">hiit</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  <div class="pill-details"><div class="pill-section"><p>Hochintensives Intervalltraining mit kurzen Belastungs- und Erholungsphasen.</p><p><strong>Ziel:</strong> Kardiovaskuläre Kapazität und mitochondriale Effizienz steigern.</p><p><strong>Methode:</strong> z. B. 4×4 nach Attia (4 min bei ~90 % HFmax, 3 min Erholung). Oder 30/30, 60/60. 1–2× pro Woche.</p></div><div class="pill-section"><h4>Timing</h4><dl class="timing-grid"><dt>Dauer</dt><dd>20 min</dd><dt>Erholung min</dt><dd>72 h</dd><dt>Sweet spot</dt><dd>84 h</dd><dt>Frequenz</dt><dd>2× / Woche</dd><dt>Evidenz</dt><dd>researched</dd></dl></div><div class="pill-section"><h4>Pillar-Beitrag</h4><dl class="timing-grid"><dt>Bewegung</dt><dd>30</dd></dl></div></div></div><div class="pill" style="background: rgb(238, 237, 254); border-color: rgba(83, 74, 183, 0.333); color: rgb(60, 52, 137);">
+    <div class="pill-name">Stabilität &amp; Balance</div>
+    <div class="pill-id">balance_stabilitaet</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div></div><div class="cell" data-fw-id="attia"><div class="pill" style="background: rgb(230, 241, 251); border-color: rgba(24, 95, 165, 0.333); color: rgb(12, 68, 124);">
+    <div class="pill-name">Zone 2 Cardio</div>
+    <div class="pill-id">zone_2</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(230, 241, 251); border-color: rgba(24, 95, 165, 0.333); color: rgb(12, 68, 124);">
+    <div class="pill-name">Krafttraining</div>
+    <div class="pill-id">krafttraining</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(230, 241, 251); border-color: rgba(24, 95, 165, 0.333); color: rgb(12, 68, 124);">
+    <div class="pill-name">Stabilität &amp; Balance</div>
+    <div class="pill-id">balance_stabilitaet</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div></div><div class="cell" data-fw-id="blue_zones"><div class="pill" style="background: rgb(225, 245, 238); border-color: rgba(15, 110, 86, 0.333); color: rgb(8, 80, 65);">
+    <div class="pill-name">Natürliche Bewegung</div>
+    <div class="pill-id">natuerliche_bewegung</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="sinclair"><div class="pill" style="background: rgb(251, 234, 240); border-color: rgba(153, 53, 86, 0.333); color: rgb(114, 36, 62);">
+    <div class="pill-name">HIIT</div>
+    <div class="pill-id">hiit</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div></div><div class="cell" data-fw-id="longo"><div class="pill" style="background: rgb(234, 243, 222); border-color: rgba(59, 109, 17, 0.333); color: rgb(39, 80, 10);">
+    <div class="pill-name">Spazieren / Gehen</div>
+    <div class="pill-id">spazieren_gehen</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(234, 243, 222); border-color: rgba(59, 109, 17, 0.333); color: rgb(39, 80, 10);">
+    <div class="pill-name">Leichte Bewegung</div>
+    <div class="pill-id">leichte_bewegung</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div></div><div class="cell" data-fw-id="ornish"><div class="pill" style="background: rgb(250, 236, 231); border-color: rgba(153, 60, 29, 0.333); color: rgb(113, 43, 19);">
+    <div class="pill-name">Spazieren / Gehen</div>
+    <div class="pill-id">spazieren_gehen</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(250, 236, 231); border-color: rgba(153, 60, 29, 0.333); color: rgb(113, 43, 19);">
+    <div class="pill-name">Yoga</div>
+    <div class="pill-id">yoga</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div></div><div class="cell" data-fw-id="aclm"><div class="pill" style="background: rgb(252, 235, 235); border-color: rgba(163, 45, 45, 0.333); color: rgb(121, 31, 31);">
+    <div class="pill-name">Physische Aktivität</div>
+    <div class="pill-id">physische_aktivitaet</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div></div><div class="cell" data-fw-id="nippard"><div class="pill" style="background: rgb(254, 243, 199); border-color: rgba(171, 126, 15, 0.333); color: rgb(110, 82, 8);">
+    <div class="pill-name">3er-Split: Push</div>
+    <div class="pill-id">split_3_push</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(254, 243, 199); border-color: rgba(171, 126, 15, 0.333); color: rgb(110, 82, 8);">
+    <div class="pill-name">3er-Split: Pull</div>
+    <div class="pill-id">split_3_pull</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(254, 243, 199); border-color: rgba(171, 126, 15, 0.333); color: rgb(110, 82, 8);">
+    <div class="pill-name">3er-Split: Legs</div>
+    <div class="pill-id">split_3_legs</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div></div><div class="cell" data-fw-id="cavaliere"><div class="pill" style="background: rgb(219, 234, 254); border-color: rgba(30, 64, 175, 0.333); color: rgb(30, 58, 95);">
+    <div class="pill-name">HIIT</div>
+    <div class="pill-id">hiit</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(219, 234, 254); border-color: rgba(30, 64, 175, 0.333); color: rgb(30, 58, 95);">
+    <div class="pill-name">Stabilität &amp; Balance</div>
+    <div class="pill-id">balance_stabilitaet</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(219, 234, 254); border-color: rgba(30, 64, 175, 0.333); color: rgb(30, 58, 95);">
+    <div class="pill-name">Ganzkörper-Training</div>
+    <div class="pill-id">ganzkoerper_training</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div></div><div class="cell" data-fw-id="nina_ruge"><div class="pill" style="background: rgb(244, 230, 231); border-color: rgba(184, 87, 99, 0.333); color: rgb(122, 53, 64);">
+    <div class="pill-name">Krafttraining</div>
+    <div class="pill-id">krafttraining</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(244, 230, 231); border-color: rgba(184, 87, 99, 0.333); color: rgb(122, 53, 64);">
+    <div class="pill-name">Physische Aktivität</div>
+    <div class="pill-id">physische_aktivitaet</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div></div><div class="cell" data-fw-id="hems"><div class="pill" style="background: rgb(219, 237, 247); border-color: rgba(30, 90, 140, 0.333); color: rgb(19, 69, 106);">
+    <div class="pill-name">Zone 2 Cardio</div>
+    <div class="pill-id">zone_2</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(219, 237, 247); border-color: rgba(30, 90, 140, 0.333); color: rgb(19, 69, 106);">
+    <div class="pill-name">HIIT</div>
+    <div class="pill-id">hiit</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(219, 237, 247); border-color: rgba(30, 90, 140, 0.333); color: rgb(19, 69, 106);">
+    <div class="pill-name">Krafttraining</div>
+    <div class="pill-id">krafttraining</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div></div><div class="cell" data-fw-id="doc_felix"><div class="pill" style="background: rgb(229, 240, 212); border-color: rgba(107, 142, 35, 0.333); color: rgb(74, 107, 23);">
+    <div class="pill-name">Zone 2 Cardio</div>
+    <div class="pill-id">zone_2</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(229, 240, 212); border-color: rgba(107, 142, 35, 0.333); color: rgb(74, 107, 23);">
+    <div class="pill-name">HIIT</div>
+    <div class="pill-id">hiit</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(229, 240, 212); border-color: rgba(107, 142, 35, 0.333); color: rgb(74, 107, 23);">
+    <div class="pill-name">Physische Aktivität</div>
+    <div class="pill-id">physische_aktivitaet</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div></div><div class="cell" data-fw-id="lyon"><div class="pill" style="background: rgb(244, 217, 216); border-color: rgba(163, 62, 62, 0.333); color: rgb(110, 40, 40);">
+    <div class="pill-name">Krafttraining</div>
+    <div class="pill-id">krafttraining</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(244, 217, 216); border-color: rgba(163, 62, 62, 0.333); color: rgb(110, 40, 40);">
+    <div class="pill-name">3er-Split: Push</div>
+    <div class="pill-id">split_3_push</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(244, 217, 216); border-color: rgba(163, 62, 62, 0.333); color: rgb(110, 40, 40);">
+    <div class="pill-name">3er-Split: Pull</div>
+    <div class="pill-id">split_3_pull</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(244, 217, 216); border-color: rgba(163, 62, 62, 0.333); color: rgb(110, 40, 40);">
+    <div class="pill-name">3er-Split: Legs</div>
+    <div class="pill-id">split_3_legs</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(244, 217, 216); border-color: rgba(163, 62, 62, 0.333); color: rgb(110, 40, 40);">
+    <div class="pill-name">Physische Aktivität</div>
+    <div class="pill-id">physische_aktivitaet</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div></div><div class="cell" data-fw-id="brecka"><div class="pill" style="background: rgb(250, 230, 204); border-color: rgba(184, 106, 31, 0.333); color: rgb(124, 70, 18);">
+    <div class="pill-name">Krafttraining</div>
+    <div class="pill-id">krafttraining</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(250, 230, 204); border-color: rgba(184, 106, 31, 0.333); color: rgb(124, 70, 18);">
+    <div class="pill-name">Physische Aktivität</div>
+    <div class="pill-id">physische_aktivitaet</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div></div><div class="cell" data-fw-id="diamandis"><div class="pill" style="background: rgb(232, 221, 245); border-color: rgba(92, 58, 140, 0.333); color: rgb(63, 37, 99);">
+    <div class="pill-name">Krafttraining</div>
+    <div class="pill-id">krafttraining</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(232, 221, 245); border-color: rgba(92, 58, 140, 0.333); color: rgb(63, 37, 99);">
+    <div class="pill-name">HIIT</div>
+    <div class="pill-id">hiit</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(232, 221, 245); border-color: rgba(92, 58, 140, 0.333); color: rgb(63, 37, 99);">
+    <div class="pill-name">Zone 2 Cardio</div>
+    <div class="pill-id">zone_2</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div></div><div class="cell" data-fw-id="love"><div class="pill" style="background: rgb(215, 232, 232); border-color: rgba(74, 138, 138, 0.333); color: rgb(47, 92, 92);">
+    <div class="pill-name">Physische Aktivität</div>
+    <div class="pill-id">physische_aktivitaet</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(215, 232, 232); border-color: rgba(74, 138, 138, 0.333); color: rgb(47, 92, 92);">
+    <div class="pill-name">Spazieren / Gehen</div>
+    <div class="pill-id">spazieren_gehen</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div></div><div class="cell" data-fw-id="huberman"><div class="pill" style="background: rgb(224, 232, 236); border-color: rgba(44, 76, 95, 0.333); color: rgb(26, 48, 64);">
+    <div class="pill-name">Zone 2 Cardio</div>
+    <div class="pill-id">zone_2</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(224, 232, 236); border-color: rgba(44, 76, 95, 0.333); color: rgb(26, 48, 64);">
+    <div class="pill-name">Krafttraining</div>
+    <div class="pill-id">krafttraining</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(224, 232, 236); border-color: rgba(44, 76, 95, 0.333); color: rgb(26, 48, 64);">
+    <div class="pill-name">HIIT</div>
+    <div class="pill-id">hiit</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div></div><div class="cell" data-fw-id="muscle_building_1"><div class="pill" style="background: rgb(250, 238, 218); border-color: rgba(133, 79, 11, 0.333); color: rgb(99, 56, 6);">
+    <div class="pill-name">Ganzkörper-Training</div>
+    <div class="pill-id">ganzkoerper_training</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div></div><div class="cell" data-fw-id="muscle_building_2"><div class="pill" style="background: rgb(250, 238, 218); border-color: rgba(133, 79, 11, 0.333); color: rgb(99, 56, 6);">
+    <div class="pill-name">2er-Split A: Push + Bauch</div>
+    <div class="pill-id">split_2_a_push_abs</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(250, 238, 218); border-color: rgba(133, 79, 11, 0.333); color: rgb(99, 56, 6);">
+    <div class="pill-name">2er-Split B: Pull + Beine</div>
+    <div class="pill-id">split_2_b_pull_legs</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div></div><div class="cell" data-fw-id="muscle_building_3"><div class="pill" style="background: rgb(250, 238, 218); border-color: rgba(133, 79, 11, 0.333); color: rgb(99, 56, 6);">
+    <div class="pill-name">3er-Split: Push</div>
+    <div class="pill-id">split_3_push</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(250, 238, 218); border-color: rgba(133, 79, 11, 0.333); color: rgb(99, 56, 6);">
+    <div class="pill-name">3er-Split: Pull</div>
+    <div class="pill-id">split_3_pull</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(250, 238, 218); border-color: rgba(133, 79, 11, 0.333); color: rgb(99, 56, 6);">
+    <div class="pill-name">3er-Split: Legs</div>
+    <div class="pill-id">split_3_legs</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div></div><div class="pillar-cell">
+      <span class="pillar-de">Mental</span>
+      <span class="pillar-en">Mental</span>
+    </div><div class="cell" data-fw-id="bryan_johnson"><div class="pill" style="background: rgb(238, 237, 254); border-color: rgba(83, 74, 183, 0.333); color: rgb(60, 52, 137);">
+    <div class="pill-name">Meditation</div>
+    <div class="pill-id">meditation</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(238, 237, 254); border-color: rgba(83, 74, 183, 0.333); color: rgb(60, 52, 137);">
+    <div class="pill-name">Herzratenvariabilität</div>
+    <div class="pill-id">herzratenvariabilitaet</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="attia"><div class="pill" style="background: rgb(230, 241, 251); border-color: rgba(24, 95, 165, 0.333); color: rgb(12, 68, 124);">
+    <div class="pill-name">Emotionale Gesundheit</div>
+    <div class="pill-id">emotionale_gesundheit</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div></div><div class="cell" data-fw-id="blue_zones"><div class="pill" style="background: rgb(225, 245, 238); border-color: rgba(15, 110, 86, 0.333); color: rgb(8, 80, 65);">
+    <div class="pill-name">Stressreduktion</div>
+    <div class="pill-id">stressreduktion</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="sinclair"><div class="cell-empty">—</div></div><div class="cell" data-fw-id="longo"><div class="cell-empty">—</div></div><div class="cell" data-fw-id="ornish"><div class="pill" style="background: rgb(250, 236, 231); border-color: rgba(153, 60, 29, 0.333); color: rgb(113, 43, 19);">
+    <div class="pill-name">Meditation</div>
+    <div class="pill-id">meditation</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(250, 236, 231); border-color: rgba(153, 60, 29, 0.333); color: rgb(113, 43, 19);">
+    <div class="pill-name">Atemarbeit</div>
+    <div class="pill-id">atmen</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(250, 236, 231); border-color: rgba(153, 60, 29, 0.333); color: rgb(113, 43, 19);">
+    <div class="pill-name">Stressreduktion</div>
+    <div class="pill-id">stressreduktion</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="aclm"><div class="pill" style="background: rgb(252, 235, 235); border-color: rgba(163, 45, 45, 0.333); color: rgb(121, 31, 31);">
+    <div class="pill-name">Stressreduktion</div>
+    <div class="pill-id">stressreduktion</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="nippard"><div class="cell-empty">—</div></div><div class="cell" data-fw-id="cavaliere"><div class="cell-empty">—</div></div><div class="cell" data-fw-id="nina_ruge"><div class="pill" style="background: rgb(244, 230, 231); border-color: rgba(184, 87, 99, 0.333); color: rgb(122, 53, 64);">
+    <div class="pill-name">Stressreduktion</div>
+    <div class="pill-id">stressreduktion</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(244, 230, 231); border-color: rgba(184, 87, 99, 0.333); color: rgb(122, 53, 64);">
+    <div class="pill-name">Meditation</div>
+    <div class="pill-id">meditation</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="hems"><div class="pill" style="background: rgb(219, 237, 247); border-color: rgba(30, 90, 140, 0.333); color: rgb(19, 69, 106);">
+    <div class="pill-name">Diagnostik &amp; Blutwerte</div>
+    <div class="pill-id">diagnostik_blutwerte</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="doc_felix"><div class="pill" style="background: rgb(229, 240, 212); border-color: rgba(107, 142, 35, 0.333); color: rgb(74, 107, 23);">
+    <div class="pill-name">Stressreduktion</div>
+    <div class="pill-id">stressreduktion</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(229, 240, 212); border-color: rgba(107, 142, 35, 0.333); color: rgb(74, 107, 23);">
+    <div class="pill-name">Atemarbeit</div>
+    <div class="pill-id">atmen</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(229, 240, 212); border-color: rgba(107, 142, 35, 0.333); color: rgb(74, 107, 23);">
+    <div class="pill-name">Meditation</div>
+    <div class="pill-id">meditation</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="lyon"><div class="pill" style="background: rgb(244, 217, 216); border-color: rgba(163, 62, 62, 0.333); color: rgb(110, 40, 40);">
+    <div class="pill-name">Diagnostik &amp; Blutwerte</div>
+    <div class="pill-id">diagnostik_blutwerte</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="brecka"><div class="pill" style="background: rgb(250, 230, 204); border-color: rgba(184, 106, 31, 0.333); color: rgb(124, 70, 18);">
+    <div class="pill-name">Atemarbeit</div>
+    <div class="pill-id">atmen</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(250, 230, 204); border-color: rgba(184, 106, 31, 0.333); color: rgb(124, 70, 18);">
+    <div class="pill-name">Stressreduktion</div>
+    <div class="pill-id">stressreduktion</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(250, 230, 204); border-color: rgba(184, 106, 31, 0.333); color: rgb(124, 70, 18);">
+    <div class="pill-name">Kälteexposition</div>
+    <div class="pill-id">kaelteexposition</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(250, 230, 204); border-color: rgba(184, 106, 31, 0.333); color: rgb(124, 70, 18);">
+    <div class="pill-name">Hitzeexposition (Sauna)</div>
+    <div class="pill-id">hitzeexposition</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(250, 230, 204); border-color: rgba(184, 106, 31, 0.333); color: rgb(124, 70, 18);">
+    <div class="pill-name">Diagnostik &amp; Blutwerte</div>
+    <div class="pill-id">diagnostik_blutwerte</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="diamandis"><div class="pill" style="background: rgb(232, 221, 245); border-color: rgba(92, 58, 140, 0.333); color: rgb(63, 37, 99);">
+    <div class="pill-name">Meditation</div>
+    <div class="pill-id">meditation</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(232, 221, 245); border-color: rgba(92, 58, 140, 0.333); color: rgb(63, 37, 99);">
+    <div class="pill-name">Diagnostik &amp; Blutwerte</div>
+    <div class="pill-id">diagnostik_blutwerte</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="love"><div class="pill" style="background: rgb(215, 232, 232); border-color: rgba(74, 138, 138, 0.333); color: rgb(47, 92, 92);">
+    <div class="pill-name">Meditation</div>
+    <div class="pill-id">meditation</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(215, 232, 232); border-color: rgba(74, 138, 138, 0.333); color: rgb(47, 92, 92);">
+    <div class="pill-name">Stressreduktion</div>
+    <div class="pill-id">stressreduktion</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="huberman"><div class="pill" style="background: rgb(224, 232, 236); border-color: rgba(44, 76, 95, 0.333); color: rgb(26, 48, 64);">
+    <div class="pill-name">Meditation</div>
+    <div class="pill-id">meditation</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(224, 232, 236); border-color: rgba(44, 76, 95, 0.333); color: rgb(26, 48, 64);">
+    <div class="pill-name">Atemarbeit</div>
+    <div class="pill-id">atmen</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(224, 232, 236); border-color: rgba(44, 76, 95, 0.333); color: rgb(26, 48, 64);">
+    <div class="pill-name">Kälteexposition</div>
+    <div class="pill-id">kaelteexposition</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(224, 232, 236); border-color: rgba(44, 76, 95, 0.333); color: rgb(26, 48, 64);">
+    <div class="pill-name">Hitzeexposition (Sauna)</div>
+    <div class="pill-id">hitzeexposition</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(224, 232, 236); border-color: rgba(44, 76, 95, 0.333); color: rgb(26, 48, 64);">
+    <div class="pill-name">NSDR / Yoga Nidra</div>
+    <div class="pill-id">nsdr</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="muscle_building_1"><div class="cell-empty">—</div></div><div class="cell" data-fw-id="muscle_building_2"><div class="cell-empty">—</div></div><div class="cell" data-fw-id="muscle_building_3"><div class="cell-empty">—</div></div><div class="pillar-cell">
+      <span class="pillar-de">Schlaf</span>
+      <span class="pillar-en">Sleep</span>
+    </div><div class="cell" data-fw-id="bryan_johnson"><div class="pill" style="background: rgb(238, 237, 254); border-color: rgba(83, 74, 183, 0.333); color: rgb(60, 52, 137);">
+    <div class="pill-name">Feste Schlafenszeit</div>
+    <div class="pill-id">schlafenszeit</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(238, 237, 254); border-color: rgba(83, 74, 183, 0.333); color: rgb(60, 52, 137);">
+    <div class="pill-name">Schlaf-Tracking</div>
+    <div class="pill-id">schlaftracking</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="attia"><div class="pill" style="background: rgb(230, 241, 251); border-color: rgba(24, 95, 165, 0.333); color: rgb(12, 68, 124);">
+    <div class="pill-name">Schlafhygiene</div>
+    <div class="pill-id">schlafhygiene</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="blue_zones"><div class="cell-empty">—</div></div><div class="cell" data-fw-id="sinclair"><div class="pill" style="background: rgb(251, 234, 240); border-color: rgba(153, 53, 86, 0.333); color: rgb(114, 36, 62);">
+    <div class="pill-name">Schlafhygiene</div>
+    <div class="pill-id">schlafhygiene</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="longo"><div class="cell-empty">—</div></div><div class="cell" data-fw-id="ornish"><div class="pill" style="background: rgb(250, 236, 231); border-color: rgba(153, 60, 29, 0.333); color: rgb(113, 43, 19);">
+    <div class="pill-name">Erholsamer Schlaf</div>
+    <div class="pill-id">erholsamer_schlaf</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="aclm"><div class="pill" style="background: rgb(252, 235, 235); border-color: rgba(163, 45, 45, 0.333); color: rgb(121, 31, 31);">
+    <div class="pill-name">Erholsamer Schlaf</div>
+    <div class="pill-id">erholsamer_schlaf</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="nippard"><div class="pill" style="background: rgb(254, 243, 199); border-color: rgba(171, 126, 15, 0.333); color: rgb(110, 82, 8);">
+    <div class="pill-name">Schlafquantität</div>
+    <div class="pill-id">schlafquantitaet</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="cavaliere"><div class="pill" style="background: rgb(219, 234, 254); border-color: rgba(30, 64, 175, 0.333); color: rgb(30, 58, 95);">
+    <div class="pill-name">Erholsamer Schlaf</div>
+    <div class="pill-id">erholsamer_schlaf</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="nina_ruge"><div class="pill" style="background: rgb(244, 230, 231); border-color: rgba(184, 87, 99, 0.333); color: rgb(122, 53, 64);">
+    <div class="pill-name">Feste Schlafenszeit</div>
+    <div class="pill-id">schlafenszeit</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(244, 230, 231); border-color: rgba(184, 87, 99, 0.333); color: rgb(122, 53, 64);">
+    <div class="pill-name">Erholsamer Schlaf</div>
+    <div class="pill-id">erholsamer_schlaf</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="hems"><div class="pill" style="background: rgb(219, 237, 247); border-color: rgba(30, 90, 140, 0.333); color: rgb(19, 69, 106);">
+    <div class="pill-name">Erholsamer Schlaf</div>
+    <div class="pill-id">erholsamer_schlaf</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(219, 237, 247); border-color: rgba(30, 90, 140, 0.333); color: rgb(19, 69, 106);">
+    <div class="pill-name">Feste Schlafenszeit</div>
+    <div class="pill-id">schlafenszeit</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(219, 237, 247); border-color: rgba(30, 90, 140, 0.333); color: rgb(19, 69, 106);">
+    <div class="pill-name">Morgenlicht</div>
+    <div class="pill-id">morgensonne</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="doc_felix"><div class="pill" style="background: rgb(229, 240, 212); border-color: rgba(107, 142, 35, 0.333); color: rgb(74, 107, 23);">
+    <div class="pill-name">Feste Schlafenszeit</div>
+    <div class="pill-id">schlafenszeit</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(229, 240, 212); border-color: rgba(107, 142, 35, 0.333); color: rgb(74, 107, 23);">
+    <div class="pill-name">Erholsamer Schlaf</div>
+    <div class="pill-id">erholsamer_schlaf</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="lyon"><div class="pill" style="background: rgb(244, 217, 216); border-color: rgba(163, 62, 62, 0.333); color: rgb(110, 40, 40);">
+    <div class="pill-name">Erholsamer Schlaf</div>
+    <div class="pill-id">erholsamer_schlaf</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="brecka"><div class="pill" style="background: rgb(250, 230, 204); border-color: rgba(184, 106, 31, 0.333); color: rgb(124, 70, 18);">
+    <div class="pill-name">Erholsamer Schlaf</div>
+    <div class="pill-id">erholsamer_schlaf</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="diamandis"><div class="pill" style="background: rgb(232, 221, 245); border-color: rgba(92, 58, 140, 0.333); color: rgb(63, 37, 99);">
+    <div class="pill-name">Feste Schlafenszeit</div>
+    <div class="pill-id">schlafenszeit</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(232, 221, 245); border-color: rgba(92, 58, 140, 0.333); color: rgb(63, 37, 99);">
+    <div class="pill-name">Erholsamer Schlaf</div>
+    <div class="pill-id">erholsamer_schlaf</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="love"><div class="pill" style="background: rgb(215, 232, 232); border-color: rgba(74, 138, 138, 0.333); color: rgb(47, 92, 92);">
+    <div class="pill-name">Erholsamer Schlaf</div>
+    <div class="pill-id">erholsamer_schlaf</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(215, 232, 232); border-color: rgba(74, 138, 138, 0.333); color: rgb(47, 92, 92);">
+    <div class="pill-name">Schlafhygiene</div>
+    <div class="pill-id">schlafhygiene</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="huberman"><div class="pill" style="background: rgb(224, 232, 236); border-color: rgba(44, 76, 95, 0.333); color: rgb(26, 48, 64);">
+    <div class="pill-name">Feste Schlafenszeit</div>
+    <div class="pill-id">schlafenszeit</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(224, 232, 236); border-color: rgba(44, 76, 95, 0.333); color: rgb(26, 48, 64);">
+    <div class="pill-name">Erholsamer Schlaf</div>
+    <div class="pill-id">erholsamer_schlaf</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(224, 232, 236); border-color: rgba(44, 76, 95, 0.333); color: rgb(26, 48, 64);">
+    <div class="pill-name">Schlafhygiene</div>
+    <div class="pill-id">schlafhygiene</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(224, 232, 236); border-color: rgba(44, 76, 95, 0.333); color: rgb(26, 48, 64);">
+    <div class="pill-name">Morgenlicht</div>
+    <div class="pill-id">morgensonne</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="muscle_building_1"><div class="pill" style="background: rgb(250, 238, 218); border-color: rgba(133, 79, 11, 0.333); color: rgb(99, 56, 6);">
+    <div class="pill-name">Schlafquantität</div>
+    <div class="pill-id">schlafquantitaet</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="muscle_building_2"><div class="pill" style="background: rgb(250, 238, 218); border-color: rgba(133, 79, 11, 0.333); color: rgb(99, 56, 6);">
+    <div class="pill-name">Schlafquantität</div>
+    <div class="pill-id">schlafquantitaet</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="muscle_building_3"><div class="pill" style="background: rgb(250, 238, 218); border-color: rgba(133, 79, 11, 0.333); color: rgb(99, 56, 6);">
+    <div class="pill-name">Schlafquantität</div>
+    <div class="pill-id">schlafquantitaet</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="pillar-cell">
+      <span class="pillar-de">Sozial</span>
+      <span class="pillar-en">Social</span>
+    </div><div class="cell" data-fw-id="bryan_johnson"><div class="cell-empty">—</div></div><div class="cell" data-fw-id="attia"><div class="cell-empty">—</div></div><div class="cell" data-fw-id="blue_zones"><div class="pill" style="background: rgb(225, 245, 238); border-color: rgba(15, 110, 86, 0.333); color: rgb(8, 80, 65);">
+    <div class="pill-name">Right Tribe</div>
+    <div class="pill-id">right_tribe</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(225, 245, 238); border-color: rgba(15, 110, 86, 0.333); color: rgb(8, 80, 65);">
+    <div class="pill-name">Familie zuerst</div>
+    <div class="pill-id">familie_zuerst</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(225, 245, 238); border-color: rgba(15, 110, 86, 0.333); color: rgb(8, 80, 65);">
+    <div class="pill-name">Belong (Glaube)</div>
+    <div class="pill-id">belong_glaube</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(225, 245, 238); border-color: rgba(15, 110, 86, 0.333); color: rgb(8, 80, 65);">
+    <div class="pill-name">Wein um 5</div>
+    <div class="pill-id">wein_um_5</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(225, 245, 238); border-color: rgba(15, 110, 86, 0.333); color: rgb(8, 80, 65);">
+    <div class="pill-name">Gemeinsame Mahlzeiten</div>
+    <div class="pill-id">gemeinsame_mahlzeiten</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="sinclair"><div class="cell-empty">—</div></div><div class="cell" data-fw-id="longo"><div class="pill" style="background: rgb(234, 243, 222); border-color: rgba(59, 109, 17, 0.333); color: rgb(39, 80, 10);">
+    <div class="pill-name">Mediterrane Kultur</div>
+    <div class="pill-id">mediterran_kultur</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(234, 243, 222); border-color: rgba(59, 109, 17, 0.333); color: rgb(39, 80, 10);">
+    <div class="pill-name">Gemeinsame Mahlzeiten</div>
+    <div class="pill-id">gemeinsame_mahlzeiten</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="ornish"><div class="pill" style="background: rgb(250, 236, 231); border-color: rgba(153, 60, 29, 0.333); color: rgb(113, 43, 19);">
+    <div class="pill-name">Love More</div>
+    <div class="pill-id">love_more</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div><div class="pill" style="background: rgb(250, 236, 231); border-color: rgba(153, 60, 29, 0.333); color: rgb(113, 43, 19);">
+    <div class="pill-name">Unterstützung</div>
+    <div class="pill-id">unterstuetzung</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(250, 236, 231); border-color: rgba(153, 60, 29, 0.333); color: rgb(113, 43, 19);">
+    <div class="pill-name">Tiefe Beziehungen</div>
+    <div class="pill-id">beziehungen</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="aclm"><div class="pill" style="background: rgb(252, 235, 235); border-color: rgba(163, 45, 45, 0.333); color: rgb(121, 31, 31);">
+    <div class="pill-name">Soziale Kontakte</div>
+    <div class="pill-id">sozialkontakte</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="nippard"><div class="cell-empty">—</div></div><div class="cell" data-fw-id="cavaliere"><div class="cell-empty">—</div></div><div class="cell" data-fw-id="nina_ruge"><div class="cell-empty">—</div></div><div class="cell" data-fw-id="hems"><div class="pill" style="background: rgb(219, 237, 247); border-color: rgba(30, 90, 140, 0.333); color: rgb(19, 69, 106);">
+    <div class="pill-name">Soziale Kontakte</div>
+    <div class="pill-id">sozialkontakte</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="doc_felix"><div class="cell-empty">—</div></div><div class="cell" data-fw-id="lyon"><div class="cell-empty">—</div></div><div class="cell" data-fw-id="brecka"><div class="cell-empty">—</div></div><div class="cell" data-fw-id="diamandis"><div class="cell-empty">—</div></div><div class="cell" data-fw-id="love"><div class="pill" style="background: rgb(215, 232, 232); border-color: rgba(74, 138, 138, 0.333); color: rgb(47, 92, 92);">
+    <div class="pill-name">Soziale Kontakte</div>
+    <div class="pill-id">sozialkontakte</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="huberman"><div class="cell-empty">—</div></div><div class="cell" data-fw-id="muscle_building_1"><div class="cell-empty">—</div></div><div class="cell" data-fw-id="muscle_building_2"><div class="cell-empty">—</div></div><div class="cell" data-fw-id="muscle_building_3"><div class="cell-empty">—</div></div><div class="pillar-cell">
+      <span class="pillar-de">Ernährung</span>
+      <span class="pillar-en">Nutrition</span>
+    </div><div class="cell" data-fw-id="bryan_johnson"><div class="pill" style="background: rgb(238, 237, 254); border-color: rgba(83, 74, 183, 0.333); color: rgb(60, 52, 137);">
+    <div class="pill-name">Vegan</div>
+    <div class="pill-id">vegan</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(238, 237, 254); border-color: rgba(83, 74, 183, 0.333); color: rgb(60, 52, 137);">
+    <div class="pill-name">Kalorienrestriktion</div>
+    <div class="pill-id">kalorienrestriktion</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(238, 237, 254); border-color: rgba(83, 74, 183, 0.333); color: rgb(60, 52, 137);">
+    <div class="pill-name">Kein Zucker</div>
+    <div class="pill-id">kein_zucker</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="attia"><div class="pill" style="background: rgb(230, 241, 251); border-color: rgba(24, 95, 165, 0.333); color: rgb(12, 68, 124);">
+    <div class="pill-name">Zeitfenster-Essen</div>
+    <div class="pill-id">zeitfenster_essen</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(230, 241, 251); border-color: rgba(24, 95, 165, 0.333); color: rgb(12, 68, 124);">
+    <div class="pill-name">Protein-Priorität</div>
+    <div class="pill-id">protein</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="blue_zones"><div class="pill" style="background: rgb(225, 245, 238); border-color: rgba(15, 110, 86, 0.333); color: rgb(8, 80, 65);">
+    <div class="pill-name">Pflanzlich-vollwertig</div>
+    <div class="pill-id">pflanzlich_vollwertig</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(225, 245, 238); border-color: rgba(15, 110, 86, 0.333); color: rgb(8, 80, 65);">
+    <div class="pill-name">80-%-Regel</div>
+    <div class="pill-id">achtzig_prozent</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div></div><div class="cell" data-fw-id="sinclair"><div class="pill" style="background: rgb(251, 234, 240); border-color: rgba(153, 53, 86, 0.333); color: rgb(114, 36, 62);">
+    <div class="pill-name">Kalorienrestriktion</div>
+    <div class="pill-id">kalorienrestriktion</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(251, 234, 240); border-color: rgba(153, 53, 86, 0.333); color: rgb(114, 36, 62);">
+    <div class="pill-name">Intervallfasten</div>
+    <div class="pill-id">intervallfasten</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(251, 234, 240); border-color: rgba(153, 53, 86, 0.333); color: rgb(114, 36, 62);">
+    <div class="pill-name">Wenig Fleisch</div>
+    <div class="pill-id">wenig_fleisch</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="longo"><div class="pill" style="background: rgb(234, 243, 222); border-color: rgba(59, 109, 17, 0.333); color: rgb(39, 80, 10);">
+    <div class="pill-name">Kalorienrestriktion</div>
+    <div class="pill-id">kalorienrestriktion</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(234, 243, 222); border-color: rgba(59, 109, 17, 0.333); color: rgb(39, 80, 10);">
+    <div class="pill-name">Longevity-Diät</div>
+    <div class="pill-id">longevity_diaet</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(234, 243, 222); border-color: rgba(59, 109, 17, 0.333); color: rgb(39, 80, 10);">
+    <div class="pill-name">Pescetarisch</div>
+    <div class="pill-id">pescetarisch</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(234, 243, 222); border-color: rgba(59, 109, 17, 0.333); color: rgb(39, 80, 10);">
+    <div class="pill-name">Scheinfasten (FMD)</div>
+    <div class="pill-id">scheinfasten</div>
+    <span class="pill-cycle-tag">Zyklus</span>
+  </div></div><div class="cell" data-fw-id="ornish"><div class="pill" style="background: rgb(250, 236, 231); border-color: rgba(153, 60, 29, 0.333); color: rgb(113, 43, 19);">
+    <div class="pill-name">Sehr fettarm</div>
+    <div class="pill-id">sehr_fettarm</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(250, 236, 231); border-color: rgba(153, 60, 29, 0.333); color: rgb(113, 43, 19);">
+    <div class="pill-name">Pflanzlich-vollwertig</div>
+    <div class="pill-id">pflanzlich_vollwertig</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="aclm"><div class="pill" style="background: rgb(252, 235, 235); border-color: rgba(163, 45, 45, 0.333); color: rgb(121, 31, 31);">
+    <div class="pill-name">Pflanzlich-vollwertig</div>
+    <div class="pill-id">pflanzlich_vollwertig</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="nippard"><div class="pill" style="background: rgb(254, 243, 199); border-color: rgba(171, 126, 15, 0.333); color: rgb(110, 82, 8);">
+    <div class="pill-name">Protein-Priorität</div>
+    <div class="pill-id">protein</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(254, 243, 199); border-color: rgba(171, 126, 15, 0.333); color: rgb(110, 82, 8);">
+    <div class="pill-name">Kalorienüberschuss</div>
+    <div class="pill-id">kalorienueberschuss</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="cavaliere"><div class="pill" style="background: rgb(219, 234, 254); border-color: rgba(30, 64, 175, 0.333); color: rgb(30, 58, 95);">
+    <div class="pill-name">Protein-Priorität</div>
+    <div class="pill-id">protein</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="nina_ruge"><div class="pill" style="background: rgb(244, 230, 231); border-color: rgba(184, 87, 99, 0.333); color: rgb(122, 53, 64);">
+    <div class="pill-name">Protein-Priorität</div>
+    <div class="pill-id">protein</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(244, 230, 231); border-color: rgba(184, 87, 99, 0.333); color: rgb(122, 53, 64);">
+    <div class="pill-name">Pflanzlich-vollwertig</div>
+    <div class="pill-id">pflanzlich_vollwertig</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="hems"><div class="pill" style="background: rgb(219, 237, 247); border-color: rgba(30, 90, 140, 0.333); color: rgb(19, 69, 106);">
+    <div class="pill-name">Protein-Priorität</div>
+    <div class="pill-id">protein</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(219, 237, 247); border-color: rgba(30, 90, 140, 0.333); color: rgb(19, 69, 106);">
+    <div class="pill-name">Pflanzlich-vollwertig</div>
+    <div class="pill-id">pflanzlich_vollwertig</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="doc_felix"><div class="pill" style="background: rgb(229, 240, 212); border-color: rgba(107, 142, 35, 0.333); color: rgb(74, 107, 23);">
+    <div class="pill-name">Kein Zucker</div>
+    <div class="pill-id">kein_zucker</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(229, 240, 212); border-color: rgba(107, 142, 35, 0.333); color: rgb(74, 107, 23);">
+    <div class="pill-name">Zeitfenster-Essen</div>
+    <div class="pill-id">zeitfenster_essen</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(229, 240, 212); border-color: rgba(107, 142, 35, 0.333); color: rgb(74, 107, 23);">
+    <div class="pill-name">Protein-Priorität</div>
+    <div class="pill-id">protein</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="lyon"><div class="pill" style="background: rgb(244, 217, 216); border-color: rgba(163, 62, 62, 0.333); color: rgb(110, 40, 40);">
+    <div class="pill-name">Protein-Priorität</div>
+    <div class="pill-id">protein</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="brecka"><div class="pill" style="background: rgb(250, 230, 204); border-color: rgba(184, 106, 31, 0.333); color: rgb(124, 70, 18);">
+    <div class="pill-name">Kein Zucker</div>
+    <div class="pill-id">kein_zucker</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="diamandis"><div class="pill" style="background: rgb(232, 221, 245); border-color: rgba(92, 58, 140, 0.333); color: rgb(63, 37, 99);">
+    <div class="pill-name">Zeitfenster-Essen</div>
+    <div class="pill-id">zeitfenster_essen</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(232, 221, 245); border-color: rgba(92, 58, 140, 0.333); color: rgb(63, 37, 99);">
+    <div class="pill-name">Protein-Priorität</div>
+    <div class="pill-id">protein</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="love"><div class="pill" style="background: rgb(215, 232, 232); border-color: rgba(74, 138, 138, 0.333); color: rgb(47, 92, 92);">
+    <div class="pill-name">Pflanzlich-vollwertig</div>
+    <div class="pill-id">pflanzlich_vollwertig</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(215, 232, 232); border-color: rgba(74, 138, 138, 0.333); color: rgb(47, 92, 92);">
+    <div class="pill-name">Kein Zucker</div>
+    <div class="pill-id">kein_zucker</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="huberman"><div class="pill" style="background: rgb(224, 232, 236); border-color: rgba(44, 76, 95, 0.333); color: rgb(26, 48, 64);">
+    <div class="pill-name">Zeitfenster-Essen</div>
+    <div class="pill-id">zeitfenster_essen</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(224, 232, 236); border-color: rgba(44, 76, 95, 0.333); color: rgb(26, 48, 64);">
+    <div class="pill-name">Protein-Priorität</div>
+    <div class="pill-id">protein</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="muscle_building_1"><div class="pill" style="background: rgb(250, 238, 218); border-color: rgba(133, 79, 11, 0.333); color: rgb(99, 56, 6);">
+    <div class="pill-name">Protein-Priorität</div>
+    <div class="pill-id">protein</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(250, 238, 218); border-color: rgba(133, 79, 11, 0.333); color: rgb(99, 56, 6);">
+    <div class="pill-name">Kalorienüberschuss</div>
+    <div class="pill-id">kalorienueberschuss</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="muscle_building_2"><div class="pill" style="background: rgb(250, 238, 218); border-color: rgba(133, 79, 11, 0.333); color: rgb(99, 56, 6);">
+    <div class="pill-name">Protein-Priorität</div>
+    <div class="pill-id">protein</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(250, 238, 218); border-color: rgba(133, 79, 11, 0.333); color: rgb(99, 56, 6);">
+    <div class="pill-name">Kalorienüberschuss</div>
+    <div class="pill-id">kalorienueberschuss</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="muscle_building_3"><div class="pill" style="background: rgb(250, 238, 218); border-color: rgba(133, 79, 11, 0.333); color: rgb(99, 56, 6);">
+    <div class="pill-name">Protein-Priorität</div>
+    <div class="pill-id">protein</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(250, 238, 218); border-color: rgba(133, 79, 11, 0.333); color: rgb(99, 56, 6);">
+    <div class="pill-name">Kalorienüberschuss</div>
+    <div class="pill-id">kalorienueberschuss</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="pillar-cell">
+      <span class="pillar-de">Moleküle</span>
+      <span class="pillar-en">Molecules</span>
+    </div><div class="cell" data-fw-id="bryan_johnson"><div class="pill" style="background: rgb(238, 237, 254); border-color: rgba(83, 74, 183, 0.333); color: rgb(60, 52, 137);">
+    <div class="pill-name">100+ Supplemente</div>
+    <div class="pill-id">supplemente_100</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(238, 237, 254); border-color: rgba(83, 74, 183, 0.333); color: rgb(60, 52, 137);">
+    <div class="pill-name">NAD+</div>
+    <div class="pill-id">nad_plus</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(238, 237, 254); border-color: rgba(83, 74, 183, 0.333); color: rgb(60, 52, 137);">
+    <div class="pill-name">Vitamin D3</div>
+    <div class="pill-id">vitamin_d3</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(238, 237, 254); border-color: rgba(83, 74, 183, 0.333); color: rgb(60, 52, 137);">
+    <div class="pill-name">Vitamin K2 (MK-7)</div>
+    <div class="pill-id">vitamin_k2</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(238, 237, 254); border-color: rgba(83, 74, 183, 0.333); color: rgb(60, 52, 137);">
+    <div class="pill-name">Omega-3 (EPA/DHA)</div>
+    <div class="pill-id">omega_3</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(238, 237, 254); border-color: rgba(83, 74, 183, 0.333); color: rgb(60, 52, 137);">
+    <div class="pill-name">Magnesium</div>
+    <div class="pill-id">magnesium</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(238, 237, 254); border-color: rgba(83, 74, 183, 0.333); color: rgb(60, 52, 137);">
+    <div class="pill-name">Glycin</div>
+    <div class="pill-id">glycin</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(238, 237, 254); border-color: rgba(83, 74, 183, 0.333); color: rgb(60, 52, 137);">
+    <div class="pill-name">Spermidin</div>
+    <div class="pill-id">spermidin</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(238, 237, 254); border-color: rgba(83, 74, 183, 0.333); color: rgb(60, 52, 137);">
+    <div class="pill-name">NAC (N-Acetylcystein)</div>
+    <div class="pill-id">nac</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(238, 237, 254); border-color: rgba(83, 74, 183, 0.333); color: rgb(60, 52, 137);">
+    <div class="pill-name">Curcumin</div>
+    <div class="pill-id">curcumin</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="attia"><div class="pill" style="background: rgb(230, 241, 251); border-color: rgba(24, 95, 165, 0.333); color: rgb(12, 68, 124);">
+    <div class="pill-name">Vitamin D3</div>
+    <div class="pill-id">vitamin_d3</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(230, 241, 251); border-color: rgba(24, 95, 165, 0.333); color: rgb(12, 68, 124);">
+    <div class="pill-name">Vitamin K2 (MK-7)</div>
+    <div class="pill-id">vitamin_k2</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(230, 241, 251); border-color: rgba(24, 95, 165, 0.333); color: rgb(12, 68, 124);">
+    <div class="pill-name">Omega-3 (EPA/DHA)</div>
+    <div class="pill-id">omega_3</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(230, 241, 251); border-color: rgba(24, 95, 165, 0.333); color: rgb(12, 68, 124);">
+    <div class="pill-name">Magnesium</div>
+    <div class="pill-id">magnesium</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(230, 241, 251); border-color: rgba(24, 95, 165, 0.333); color: rgb(12, 68, 124);">
+    <div class="pill-name">Glycin</div>
+    <div class="pill-id">glycin</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(230, 241, 251); border-color: rgba(24, 95, 165, 0.333); color: rgb(12, 68, 124);">
+    <div class="pill-name">B-Vitamine (methyliert)</div>
+    <div class="pill-id">b_vitamine_methyliert</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="blue_zones"><div class="cell-empty">—</div></div><div class="cell" data-fw-id="sinclair"><div class="pill" style="background: rgb(251, 234, 240); border-color: rgba(153, 53, 86, 0.333); color: rgb(114, 36, 62);">
+    <div class="pill-name">NMN</div>
+    <div class="pill-id">nmn</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(251, 234, 240); border-color: rgba(153, 53, 86, 0.333); color: rgb(114, 36, 62);">
+    <div class="pill-name">Resveratrol</div>
+    <div class="pill-id">resveratrol</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(251, 234, 240); border-color: rgba(153, 53, 86, 0.333); color: rgb(114, 36, 62);">
+    <div class="pill-name">Vitamin D3</div>
+    <div class="pill-id">vitamin_d3</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(251, 234, 240); border-color: rgba(153, 53, 86, 0.333); color: rgb(114, 36, 62);">
+    <div class="pill-name">Vitamin K2 (MK-7)</div>
+    <div class="pill-id">vitamin_k2</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(251, 234, 240); border-color: rgba(153, 53, 86, 0.333); color: rgb(114, 36, 62);">
+    <div class="pill-name">Omega-3 (EPA/DHA)</div>
+    <div class="pill-id">omega_3</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(251, 234, 240); border-color: rgba(153, 53, 86, 0.333); color: rgb(114, 36, 62);">
+    <div class="pill-name">Spermidin</div>
+    <div class="pill-id">spermidin</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(251, 234, 240); border-color: rgba(153, 53, 86, 0.333); color: rgb(114, 36, 62);">
+    <div class="pill-name">Quercetin + Fisetin</div>
+    <div class="pill-id">quercetin_fisetin</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(251, 234, 240); border-color: rgba(153, 53, 86, 0.333); color: rgb(114, 36, 62);">
+    <div class="pill-name">TMG (Trimethylglycin)</div>
+    <div class="pill-id">tmg</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="longo"><div class="pill" style="background: rgb(234, 243, 222); border-color: rgba(59, 109, 17, 0.333); color: rgb(39, 80, 10);">
+    <div class="pill-name">Multivitamin</div>
+    <div class="pill-id">multivitamin</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(234, 243, 222); border-color: rgba(59, 109, 17, 0.333); color: rgb(39, 80, 10);">
+    <div class="pill-name">Omega-3 (EPA/DHA)</div>
+    <div class="pill-id">omega_3</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(234, 243, 222); border-color: rgba(59, 109, 17, 0.333); color: rgb(39, 80, 10);">
+    <div class="pill-name">Vitamin D3</div>
+    <div class="pill-id">vitamin_d3</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(234, 243, 222); border-color: rgba(59, 109, 17, 0.333); color: rgb(39, 80, 10);">
+    <div class="pill-name">Vitamin B12</div>
+    <div class="pill-id">vitamin_b12</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="ornish"><div class="pill" style="background: rgb(250, 236, 231); border-color: rgba(153, 60, 29, 0.333); color: rgb(113, 43, 19);">
+    <div class="pill-name">Omega-3 (EPA/DHA)</div>
+    <div class="pill-id">omega_3</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(250, 236, 231); border-color: rgba(153, 60, 29, 0.333); color: rgb(113, 43, 19);">
+    <div class="pill-name">Vitamin B12</div>
+    <div class="pill-id">vitamin_b12</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(250, 236, 231); border-color: rgba(153, 60, 29, 0.333); color: rgb(113, 43, 19);">
+    <div class="pill-name">Vitamin D3</div>
+    <div class="pill-id">vitamin_d3</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(250, 236, 231); border-color: rgba(153, 60, 29, 0.333); color: rgb(113, 43, 19);">
+    <div class="pill-name">Multivitamin</div>
+    <div class="pill-id">multivitamin</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="aclm"><div class="pill" style="background: rgb(252, 235, 235); border-color: rgba(163, 45, 45, 0.333); color: rgb(121, 31, 31);">
+    <div class="pill-name">Substanzverzicht</div>
+    <div class="pill-id">substanzverzicht</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(252, 235, 235); border-color: rgba(163, 45, 45, 0.333); color: rgb(121, 31, 31);">
+    <div class="pill-name">Vitamin B12</div>
+    <div class="pill-id">vitamin_b12</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(252, 235, 235); border-color: rgba(163, 45, 45, 0.333); color: rgb(121, 31, 31);">
+    <div class="pill-name">Vitamin D3</div>
+    <div class="pill-id">vitamin_d3</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(252, 235, 235); border-color: rgba(163, 45, 45, 0.333); color: rgb(121, 31, 31);">
+    <div class="pill-name">Omega-3 (EPA/DHA)</div>
+    <div class="pill-id">omega_3</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="nippard"><div class="pill" style="background: rgb(254, 243, 199); border-color: rgba(171, 126, 15, 0.333); color: rgb(110, 82, 8);">
+    <div class="pill-name">Kreatin</div>
+    <div class="pill-id">kreatin</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(254, 243, 199); border-color: rgba(171, 126, 15, 0.333); color: rgb(110, 82, 8);">
+    <div class="pill-name">Multivitamin</div>
+    <div class="pill-id">multivitamin</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(254, 243, 199); border-color: rgba(171, 126, 15, 0.333); color: rgb(110, 82, 8);">
+    <div class="pill-name">Vitamin D3</div>
+    <div class="pill-id">vitamin_d3</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(254, 243, 199); border-color: rgba(171, 126, 15, 0.333); color: rgb(110, 82, 8);">
+    <div class="pill-name">Omega-3 (EPA/DHA)</div>
+    <div class="pill-id">omega_3</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="cavaliere"><div class="pill" style="background: rgb(219, 234, 254); border-color: rgba(30, 64, 175, 0.333); color: rgb(30, 58, 95);">
+    <div class="pill-name">Kreatin</div>
+    <div class="pill-id">kreatin</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(219, 234, 254); border-color: rgba(30, 64, 175, 0.333); color: rgb(30, 58, 95);">
+    <div class="pill-name">Multivitamin</div>
+    <div class="pill-id">multivitamin</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(219, 234, 254); border-color: rgba(30, 64, 175, 0.333); color: rgb(30, 58, 95);">
+    <div class="pill-name">Omega-3 (EPA/DHA)</div>
+    <div class="pill-id">omega_3</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="nina_ruge"><div class="pill" style="background: rgb(244, 230, 231); border-color: rgba(184, 87, 99, 0.333); color: rgb(122, 53, 64);">
+    <div class="pill-name">Vitamin D3</div>
+    <div class="pill-id">vitamin_d3</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(244, 230, 231); border-color: rgba(184, 87, 99, 0.333); color: rgb(122, 53, 64);">
+    <div class="pill-name">Omega-3 (EPA/DHA)</div>
+    <div class="pill-id">omega_3</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(244, 230, 231); border-color: rgba(184, 87, 99, 0.333); color: rgb(122, 53, 64);">
+    <div class="pill-name">Magnesium</div>
+    <div class="pill-id">magnesium</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="hems"><div class="pill" style="background: rgb(219, 237, 247); border-color: rgba(30, 90, 140, 0.333); color: rgb(19, 69, 106);">
+    <div class="pill-name">Kreatin</div>
+    <div class="pill-id">kreatin</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(219, 237, 247); border-color: rgba(30, 90, 140, 0.333); color: rgb(19, 69, 106);">
+    <div class="pill-name">Vitamin D3</div>
+    <div class="pill-id">vitamin_d3</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(219, 237, 247); border-color: rgba(30, 90, 140, 0.333); color: rgb(19, 69, 106);">
+    <div class="pill-name">Vitamin K2 (MK-7)</div>
+    <div class="pill-id">vitamin_k2</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(219, 237, 247); border-color: rgba(30, 90, 140, 0.333); color: rgb(19, 69, 106);">
+    <div class="pill-name">Magnesium</div>
+    <div class="pill-id">magnesium</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(219, 237, 247); border-color: rgba(30, 90, 140, 0.333); color: rgb(19, 69, 106);">
+    <div class="pill-name">Omega-3 (EPA/DHA)</div>
+    <div class="pill-id">omega_3</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="doc_felix"><div class="cell-empty">—</div></div><div class="cell" data-fw-id="lyon"><div class="pill" style="background: rgb(244, 217, 216); border-color: rgba(163, 62, 62, 0.333); color: rgb(110, 40, 40);">
+    <div class="pill-name">Kreatin</div>
+    <div class="pill-id">kreatin</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(244, 217, 216); border-color: rgba(163, 62, 62, 0.333); color: rgb(110, 40, 40);">
+    <div class="pill-name">Vitamin D3</div>
+    <div class="pill-id">vitamin_d3</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(244, 217, 216); border-color: rgba(163, 62, 62, 0.333); color: rgb(110, 40, 40);">
+    <div class="pill-name">Omega-3 (EPA/DHA)</div>
+    <div class="pill-id">omega_3</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="brecka"><div class="pill" style="background: rgb(250, 230, 204); border-color: rgba(184, 106, 31, 0.333); color: rgb(124, 70, 18);">
+    <div class="pill-name">B-Vitamine (methyliert)</div>
+    <div class="pill-id">b_vitamine_methyliert</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(250, 230, 204); border-color: rgba(184, 106, 31, 0.333); color: rgb(124, 70, 18);">
+    <div class="pill-name">Magnesium</div>
+    <div class="pill-id">magnesium</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(250, 230, 204); border-color: rgba(184, 106, 31, 0.333); color: rgb(124, 70, 18);">
+    <div class="pill-name">Vitamin D3</div>
+    <div class="pill-id">vitamin_d3</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(250, 230, 204); border-color: rgba(184, 106, 31, 0.333); color: rgb(124, 70, 18);">
+    <div class="pill-name">Omega-3 (EPA/DHA)</div>
+    <div class="pill-id">omega_3</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="diamandis"><div class="pill" style="background: rgb(232, 221, 245); border-color: rgba(92, 58, 140, 0.333); color: rgb(63, 37, 99);">
+    <div class="pill-name">NMN</div>
+    <div class="pill-id">nmn</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(232, 221, 245); border-color: rgba(92, 58, 140, 0.333); color: rgb(63, 37, 99);">
+    <div class="pill-name">Resveratrol</div>
+    <div class="pill-id">resveratrol</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(232, 221, 245); border-color: rgba(92, 58, 140, 0.333); color: rgb(63, 37, 99);">
+    <div class="pill-name">Vitamin D3</div>
+    <div class="pill-id">vitamin_d3</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(232, 221, 245); border-color: rgba(92, 58, 140, 0.333); color: rgb(63, 37, 99);">
+    <div class="pill-name">Omega-3 (EPA/DHA)</div>
+    <div class="pill-id">omega_3</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(232, 221, 245); border-color: rgba(92, 58, 140, 0.333); color: rgb(63, 37, 99);">
+    <div class="pill-name">Multivitamin</div>
+    <div class="pill-id">multivitamin</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(232, 221, 245); border-color: rgba(92, 58, 140, 0.333); color: rgb(63, 37, 99);">
+    <div class="pill-name">Magnesium</div>
+    <div class="pill-id">magnesium</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="love"><div class="pill" style="background: rgb(215, 232, 232); border-color: rgba(74, 138, 138, 0.333); color: rgb(47, 92, 92);">
+    <div class="pill-name">Omega-3 (EPA/DHA)</div>
+    <div class="pill-id">omega_3</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(215, 232, 232); border-color: rgba(74, 138, 138, 0.333); color: rgb(47, 92, 92);">
+    <div class="pill-name">Vitamin D3</div>
+    <div class="pill-id">vitamin_d3</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(215, 232, 232); border-color: rgba(74, 138, 138, 0.333); color: rgb(47, 92, 92);">
+    <div class="pill-name">Curcumin</div>
+    <div class="pill-id">curcumin</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="huberman"><div class="pill" style="background: rgb(224, 232, 236); border-color: rgba(44, 76, 95, 0.333); color: rgb(26, 48, 64);">
+    <div class="pill-name">Magnesium</div>
+    <div class="pill-id">magnesium</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(224, 232, 236); border-color: rgba(44, 76, 95, 0.333); color: rgb(26, 48, 64);">
+    <div class="pill-name">Vitamin D3</div>
+    <div class="pill-id">vitamin_d3</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(224, 232, 236); border-color: rgba(44, 76, 95, 0.333); color: rgb(26, 48, 64);">
+    <div class="pill-name">Omega-3 (EPA/DHA)</div>
+    <div class="pill-id">omega_3</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(224, 232, 236); border-color: rgba(44, 76, 95, 0.333); color: rgb(26, 48, 64);">
+    <div class="pill-name">Kreatin</div>
+    <div class="pill-id">kreatin</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div><div class="pill" style="background: rgb(224, 232, 236); border-color: rgba(44, 76, 95, 0.333); color: rgb(26, 48, 64);">
+    <div class="pill-name">Glycin</div>
+    <div class="pill-id">glycin</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="muscle_building_1"><div class="pill" style="background: rgb(250, 238, 218); border-color: rgba(133, 79, 11, 0.333); color: rgb(99, 56, 6);">
+    <div class="pill-name">Kreatin</div>
+    <div class="pill-id">kreatin</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="muscle_building_2"><div class="pill" style="background: rgb(250, 238, 218); border-color: rgba(133, 79, 11, 0.333); color: rgb(99, 56, 6);">
+    <div class="pill-name">Kreatin</div>
+    <div class="pill-id">kreatin</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div><div class="cell" data-fw-id="muscle_building_3"><div class="pill" style="background: rgb(250, 238, 218); border-color: rgba(133, 79, 11, 0.333); color: rgb(99, 56, 6);">
+    <div class="pill-name">Kreatin</div>
+    <div class="pill-id">kreatin</div>
+    <span class="pill-cycle-tag">continuous</span>
+  </div></div></div></div></main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="assets/app-icon.png" alt="">
+        <span class="brand-name">circady</span>
+      </div>
+      <nav class="footer-links" aria-label="Footer">
+        <a href="protocols.html" data-i18n="footer.protocols">Protocols</a>
+        <a href="support.html" data-i18n="footer.support">Support</a>
+        <a href="privacy.html" data-i18n="footer.privacy">Privacy Policy</a>
+        <a href="imprint.html" data-i18n="footer.imprint">Imprint</a>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p data-i18n="footer.disclaimer">circady supports healthy habits and is not a medical device. It does not provide medical advice, diagnosis or treatment.</p>
+      <p class="footer-pillars" id="footer-pillars">circady · Bewegung · Mental · Schlaf · Sozial · Ernährung · Moleküle</p>
+      <p data-i18n="footer.copyright">© 2026 circady. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+const DATA_URL = 'https://raw.githubusercontent.com/mkw3008/circady-metadata/refs/heads/main/frameworks_metadata.json';
+
+const PILLAR_ORDER = ['movement', 'mental', 'sleep', 'social', 'nutrition', 'molecules'];
+const PILLAR_LABELS = {
+  movement:  { de: 'Bewegung',  en: 'Movement' },
+  mental:    { de: 'Mental',    en: 'Mental' },
+  sleep:     { de: 'Schlaf',    en: 'Sleep' },
+  social:    { de: 'Sozial',    en: 'Social' },
+  nutrition: { de: 'Ernährung', en: 'Nutrition' },
+  molecules: { de: 'Moleküle',  en: 'Molecules' }
+};
+
+const I18N = {
+  de: {
+    loading: 'LADE PROTOKOLLE…',
+    errorPrefix: 'FEHLER beim Laden:',
+    errorHint: 'Lade die neue Datei nach GitHub hoch und lade neu.',
+    pillarFramework: 'Säule / Protokoll',
+    metaFrameworks: 'Protokolle',
+    metaActivities: 'Routinen',
+    metaEndorsements: 'Empfehlungen',
+    metaSchema: 'Schema',
+    metaStand: 'Stand:',
+    footerPillars: 'circady · Bewegung · Mental · Schlaf · Sozial · Ernährung · Moleküle',
+    sectionDescription: 'Beschreibung',
+    sectionTiming: 'Timing',
+    sectionPillarContrib: 'Säulen-Beitrag',
+    sectionHealthKit: 'Apple Health',
+    continuousLabel: 'Kontinuierlich (tägliche Gewohnheit)',
+    pillTagContinuous: 'kontinuierlich',
+    pillTagCyclic: 'Zyklus',
+    timingDuration: 'Dauer',
+    timingRecovery: 'Erholung min',
+    timingSweetSpot: 'Optimum',
+    timingFreq: 'Frequenz',
+    timingFreqUnit: '× / Woche',
+    timingEvidence: 'Evidenz',
+    ariaCollapse: 'Spalte einklappen',
+    ariaExpand: 'Spalte ausklappen'
+  },
+  en: {
+    loading: 'LOADING PROTOCOLS…',
+    errorPrefix: 'LOAD ERROR:',
+    errorHint: 'Upload the new file to GitHub and reload.',
+    pillarFramework: 'Pillar / Protocol',
+    metaFrameworks: 'Protocols',
+    metaActivities: 'Routines',
+    metaEndorsements: 'Endorsements',
+    metaSchema: 'Schema',
+    metaStand: 'Updated:',
+    footerPillars: 'circady · Movement · Mental · Sleep · Social · Nutrition · Molecules',
+    sectionDescription: 'Description',
+    sectionTiming: 'Timing',
+    sectionPillarContrib: 'Pillar contribution',
+    sectionHealthKit: 'Apple Health',
+    continuousLabel: 'Continuous (daily habit)',
+    pillTagContinuous: 'continuous',
+    pillTagCyclic: 'Cyclic',
+    timingDuration: 'Duration',
+    timingRecovery: 'Recovery min',
+    timingSweetSpot: 'Sweet spot',
+    timingFreq: 'Frequency',
+    timingFreqUnit: '× / week',
+    timingEvidence: 'Evidence',
+    ariaCollapse: 'Collapse column',
+    ariaExpand: 'Expand column'
+  }
+};
+
+let currentLang = (function () {
+  try { var s = localStorage.getItem('circady-lang'); if (s === 'de' || s === 'en') return s; } catch (e) {}
+  return (navigator.language || 'en').toLowerCase().indexOf('de') === 0 ? 'de' : 'en';
+})();
+let cachedData = null;
+const t = (key) => I18N[currentLang][key];
+
+// Parse Tu/Ziel/Methode / Do/Goal/Method out of markdown description (lang-neutral)
+function parseStructuredDesc(md) {
+  if (!md) return null;
+  const re = /\*\*([^:*]+):\*\*\s*([\s\S]*?)(?=\n\n\*\*[^:*]+:\*\*|$)/g;
+  const sections = {};
+  let m;
+  while ((m = re.exec(md)) !== null) {
+    sections[m[1].trim()] = m[2].trim();
+  }
+  if (Object.keys(sections).length === 0) return null;
+  return sections;
+}
+
+function fmtTiming(timing) {
+  if (!timing) return 'n/a';
+  if (timing.cycle_kind === 'continuous') {
+    return { mode: 'continuous', label: t('continuousLabel') };
+  }
+  return {
+    mode: 'supercompensation',
+    duration: timing.duration_min ? `${timing.duration_min} min` : null,
+    recovery: timing.recovery_hours_min ? `${timing.recovery_hours_min} h` : null,
+    sweet:    timing.sweet_spot_hours ? `${timing.sweet_spot_hours} h` : null,
+    freq:     timing.frequency_per_week_recommended ? `${timing.frequency_per_week_recommended}${t('timingFreqUnit')}` : null,
+    evidence: timing.evidence || null
+  };
+}
+
+function renderApp(data) {
+  cachedData = data;
+
+  // Update header meta
+  document.getElementById('meta').innerHTML = `
+    <span><strong>${data.frameworks.length}</strong> ${t('metaFrameworks')}</span>
+    <span><strong>${data.activities.filter(a => a.category !== 'reference').length}</strong> ${t('metaActivities')}</span>
+    <span><strong>${data.endorsements.length}</strong> ${t('metaEndorsements')}</span>
+    <span><strong>v${data.data_version}</strong> · ${t('metaSchema')} ${data.schema_version}</span>
+    <span>${t('metaStand')} <strong>${data.data_updated}</strong></span>
+  `;
+
+  // Update footer pillar line
+  document.getElementById('footer-pillars').textContent = t('footerPillars');
+
+  // Sort frameworks by order
+  const frameworks = [...data.frameworks].sort((a, b) => (a.order || 99) - (b.order || 99));
+
+  // Build matrix: framework_id × pillar -> list of activities
+  const matrix = {};
+  for (const fw of frameworks) {
+    matrix[fw.id] = {};
+    for (const p of PILLAR_ORDER) matrix[fw.id][p] = [];
+  }
+
+  for (const e of data.endorsements) {
+    const act = data.activities.find(a => a.id === e.activity_id);
+    if (!act || act.category === 'reference') continue;
+    if (matrix[e.framework_id] && matrix[e.framework_id][act.category]) {
+      matrix[e.framework_id][act.category].push(act);
+    }
+  }
+
+  // Render
+  const app = document.getElementById('app');
+  app.innerHTML = '';
+
+  const wrap = document.createElement('div');
+  wrap.className = 'matrix-wrap';
+
+  const grid = document.createElement('div');
+  grid.className = 'matrix';
+  grid.style.gridTemplateColumns = `160px repeat(${frameworks.length}, minmax(240px, 260px))`;
+
+  // header row
+  const corner = document.createElement('div');
+  corner.className = 'matrix-corner';
+  corner.textContent = t('pillarFramework');
+  grid.appendChild(corner);
+
+  const otherLang = currentLang === 'de' ? 'en' : 'de';
+
+  for (const fw of frameworks) {
+    const h = document.createElement('div');
+    h.className = 'fw-header';
+    h.dataset.fwId = fw.id;
+    h.style.borderTopColor = '#' + fw.palette.border;
+    const fwName = fw[`name_short_${currentLang}`] || fw.name_short_de;
+    const fwSubtitle = fw[`subtitle_${currentLang}`] || fw.subtitle_de || '';
+    h.innerHTML = `
+      <button class="collapse-toggle" type="button" aria-label="${t('ariaCollapse')}">−</button>
+      <div class="fw-name" style="color: #${fw.palette.text};">${escapeHtml(fwName)}</div>
+      <div class="fw-subtitle">${escapeHtml(fwSubtitle)}</div>
+    `;
+    h.querySelector('.collapse-toggle').addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleColumn(fw.id);
+    });
+    h.addEventListener('click', () => {
+      if (h.classList.contains('collapsed')) toggleColumn(fw.id);
+    });
+    grid.appendChild(h);
+  }
+
+  // Pillar rows
+  for (const pillar of PILLAR_ORDER) {
+    const pCell = document.createElement('div');
+    pCell.className = 'pillar-cell';
+    pCell.innerHTML = `
+      <span class="pillar-de">${PILLAR_LABELS[pillar][currentLang]}</span>
+      <span class="pillar-en">${PILLAR_LABELS[pillar][otherLang]}</span>
+    `;
+    grid.appendChild(pCell);
+
+    for (const fw of frameworks) {
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      cell.dataset.fwId = fw.id;
+      const activities = matrix[fw.id][pillar];
+      if (activities.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'cell-empty';
+        empty.textContent = '—';
+        cell.appendChild(empty);
+      } else {
+        for (const act of activities) {
+          cell.appendChild(makePill(act, fw));
+        }
+      }
+      grid.appendChild(cell);
+    }
+  }
+
+  wrap.appendChild(grid);
+  app.appendChild(wrap);
+}
+
+function makePill(act, fw) {
+  const pill = document.createElement('div');
+  pill.className = 'pill';
+  pill.style.background = '#' + fw.palette.fill;
+  pill.style.borderColor = '#' + fw.palette.border + '55';
+  pill.style.color = '#' + fw.palette.text;
+
+  const continuous = act.timing && act.timing.cycle_kind === 'continuous';
+  const cycleTag = `<span class="pill-cycle-tag">${continuous ? t('pillTagContinuous') : t('pillTagCyclic')}</span>`;
+  const actName = act[`name_${currentLang}`] || act.name_de;
+
+  pill.innerHTML = `
+    <div class="pill-name">${escapeHtml(actName)}</div>
+    <div class="pill-id">${escapeHtml(act.id)}</div>
+    ${cycleTag}
+  `;
+
+  pill.addEventListener('click', () => togglePill(pill, act, fw));
+  return pill;
+}
+
+function renderMarkdown(md) {
+  if (!md) return '';
+  // 1. HTML escapen
+  let safe = String(md)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+  // 2. Absätze splitten an Leerzeile
+  const paragraphs = safe.split(/\n\n+/);
+  return paragraphs.map(p => {
+    if (!p.trim()) return '';
+    // 3. **bold** rendern
+    let html = p.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    // 4. einzelne Newlines im Absatz → <br>
+    html = html.replace(/\n/g, '<br>');
+    return '<p>' + html + '</p>';
+  }).join('');
+}
+
+function togglePill(pill, act, fw) {
+  if (pill.classList.contains('expanded')) {
+    pill.classList.remove('expanded');
+    pill.querySelector('.pill-details')?.remove();
+    return;
+  }
+  pill.classList.add('expanded');
+
+  const desc = act[`description_${currentLang}`] || act.description_de;
+  const tm = fmtTiming(act.timing);
+
+  let html = '<div class="pill-details">';
+
+  html += `<div class="pill-section">${renderMarkdown(desc)}</div>`;
+
+  // Timing
+  html += `<div class="pill-section"><h4>${t('sectionTiming')}</h4>`;
+  if (tm === 'n/a' || !tm) {
+    html += `<p>—</p>`;
+  } else if (tm.mode === 'continuous') {
+    html += `<p>${tm.label}</p>`;
+  } else {
+    html += `<dl class="timing-grid">`;
+    if (tm.duration) html += `<dt>${t('timingDuration')}</dt><dd>${tm.duration}</dd>`;
+    if (tm.recovery) html += `<dt>${t('timingRecovery')}</dt><dd>${tm.recovery}</dd>`;
+    if (tm.sweet)    html += `<dt>${t('timingSweetSpot')}</dt><dd>${tm.sweet}</dd>`;
+    if (tm.freq)     html += `<dt>${t('timingFreq')}</dt><dd>${tm.freq}</dd>`;
+    if (tm.evidence) html += `<dt>${t('timingEvidence')}</dt><dd>${escapeHtml(tm.evidence)}</dd>`;
+    html += `</dl>`;
+  }
+  html += `</div>`;
+
+  // Pillar contribution
+  if (act.pillar_contributions) {
+    const contribs = Object.entries(act.pillar_contributions).filter(([, v]) => v > 0);
+    if (contribs.length > 0) {
+      html += `<div class="pill-section"><h4>${t('sectionPillarContrib')}</h4><dl class="timing-grid">`;
+      for (const [p, v] of contribs) {
+        html += `<dt>${PILLAR_LABELS[p]?.[currentLang] || p}</dt><dd>${v}</dd>`;
+      }
+      html += `</dl></div>`;
+    }
+  }
+
+  html += '</div>';
+
+  pill.insertAdjacentHTML('beforeend', html);
+}
+
+function toggleColumn(fwId) {
+  const headers = document.querySelectorAll(`.fw-header[data-fw-id="${fwId}"]`);
+  const cells = document.querySelectorAll(`.cell[data-fw-id="${fwId}"]`);
+  if (headers.length === 0) return;
+  const willCollapse = !headers[0].classList.contains('collapsed');
+  headers.forEach(h => {
+    h.classList.toggle('collapsed', willCollapse);
+    const btn = h.querySelector('.collapse-toggle');
+    if (btn) {
+      btn.textContent = willCollapse ? '+' : '−';
+      btn.setAttribute('aria-label', willCollapse ? t('ariaExpand') : t('ariaCollapse'));
+    }
+  });
+  cells.forEach(c => c.classList.toggle('collapsed', willCollapse));
+  updateGridLayout();
+}
+
+function updateGridLayout() {
+  const grid = document.querySelector('.matrix');
+  if (!grid) return;
+  const headers = grid.querySelectorAll('.fw-header');
+  const cols = Array.from(headers).map(h =>
+    h.classList.contains('collapsed') ? '44px' : 'minmax(240px, 260px)'
+  ).join(' ');
+  grid.style.gridTemplateColumns = `160px ${cols}`;
+}
+
+function escapeHtml(s) {
+  if (s === null || s === undefined) return '';
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function setLanguage(lang) {
+  if (lang !== 'de' && lang !== 'en') return;
+  if (lang === currentLang) return;
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+  // Loading-Label (falls noch nicht geladen)
+  const loadingP = document.querySelector('.loading p');
+  if (loadingP) loadingP.textContent = t('loading');
+  if (cachedData) renderApp(cachedData);
+}
+
+// Sprach-Switch-Handler
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
+});
+
+// Load
+fetch(DATA_URL)
+  .then(r => {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  })
+  .then(renderApp)
+  .catch(err => {
+    document.getElementById('app').innerHTML = `
+      <div class="error">
+        ${t('errorPrefix')} ${escapeHtml(err.message)}<br><br>
+        URL: ${DATA_URL}<br>
+        ${t('errorHint')}
+      </div>
+    `;
+  });
+</script>
+
+<script src="assets/i18n.js"></script>
+
+</body></html>

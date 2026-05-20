@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>circady — Longevity Routine Manager</title>
+  <meta name="description" content="circady turns the science of healthy aging into curated protocols you can actually follow — timed to your body's natural recovery cycles. Soon on the App Store.">
+
+  <link rel="icon" type="image/png" href="assets/favicon-64.png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="assets/styles.css">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="circady — Longevity Routine Manager">
+  <meta property="og:description" content="Curated longevity protocols, timed to your body's recovery cycles.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/app-icon.png">
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "circady",
+    "applicationCategory": "HealthApplication",
+    "operatingSystem": "iOS",
+    "description": "Curated longevity protocols, timed to your body's recovery cycles.",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
+  }
+  </script>
+</head>
+<body>
+
+  <!-- ===================== Header ===================== -->
+  <header class="site-header">
+    <nav class="nav" aria-label="Main">
+      <a class="brand" href="index.html" aria-label="circady — home">
+        <img src="assets/app-icon.png" alt="">
+        <span class="brand-name">circady</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#features" data-i18n="nav.features">Features</a></li>
+        <li><a href="protocols.html" data-i18n="nav.protocols">Protocols</a></li>
+        <li><a href="support.html" data-i18n="nav.support">Support</a></li>
+      </ul>
+      <div class="nav-right">
+        <div class="lang-switch" role="group" aria-label="Language">
+          <button type="button" data-lang="de">DE</button>
+          <button type="button" data-lang="en">EN</button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ===================== Hero ===================== -->
+    <section class="hero">
+      <div class="container">
+        <span class="eyebrow" data-i18n="hero.eyebrow">Longevity Routine Manager</span>
+        <h1 data-i18n="hero.title">Longevity, made routine.</h1>
+        <p class="lead" data-i18n="hero.subtitle">circady turns the science of healthy aging into curated protocols you can actually follow — timed to your body's natural recovery cycles.</p>
+        <div class="hero-cta">
+          <!-- App-Store-Link eintragen, sobald die App veröffentlicht ist -->
+          <a class="appstore-badge" href="#" aria-label="Download on the App Store">
+            <svg viewBox="0 0 384 512" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+            <span class="ab-text">
+              <span class="ab-small">Download on the</span>
+              <span class="ab-big">App Store</span>
+            </span>
+          </a>
+          <a class="btn btn--ghost" href="protocols.html" data-i18n="hero.ctaProtocols">Explore the protocols</a>
+        </div>
+
+        <!-- 3 App-Screenshots — Platzhalter.
+             Echte Bilder als assets/screen-1.png, screen-2.png, screen-3.png ablegen,
+             dann werden sie automatisch angezeigt. -->
+        <div class="shots reveal">
+          <figure class="phone">
+            <div class="phone-screen">
+              <img src="assets/screen-1.png" alt="circady app screenshot 1" onerror="this.style.display='none'">
+              <div class="phone-ph"><span class="ph-num">1</span><small data-i18n="shots.ph">Screenshot coming soon</small></div>
+            </div>
+          </figure>
+          <figure class="phone">
+            <div class="phone-screen">
+              <img src="assets/screen-2.png" alt="circady app screenshot 2" onerror="this.style.display='none'">
+              <div class="phone-ph"><span class="ph-num">2</span><small data-i18n="shots.ph">Screenshot coming soon</small></div>
+            </div>
+          </figure>
+          <figure class="phone">
+            <div class="phone-screen">
+              <img src="assets/screen-3.png" alt="circady app screenshot 3" onerror="this.style.display='none'">
+              <div class="phone-ph"><span class="ph-num">3</span><small data-i18n="shots.ph">Screenshot coming soon</small></div>
+            </div>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============= Lösung 1: Kuratierte Protokolle ============= -->
+    <section class="section section--alt" id="features">
+      <div class="container">
+        <div class="spotlight">
+          <div class="reveal">
+            <span class="eyebrow" data-i18n="spotlight.eyebrow">No more guesswork</span>
+            <h2 data-i18n="spotlight.title">Know exactly what to do</h2>
+            <p class="lead" data-i18n="spotlight.lead">You don't need to read every longevity book. circady distils 20 proven protocols into clear routines — and tells you when each one belongs in your week.</p>
+            <ul class="checklist">
+              <li data-i18n="spotlight.p1">Evidence-based routines across movement, nutrition, sleep, mind, social life and molecules.</li>
+              <li data-i18n="spotlight.p2">Timed around recovery, so your effort actually turns into progress.</li>
+              <li data-i18n="spotlight.p3">Compare 20 longevity protocols and keep what fits you.</li>
+              <li data-i18n="spotlight.p4">Never more than your body — or your week — can absorb.</li>
+            </ul>
+            <a class="btn btn--primary" href="protocols.html" data-i18n="spotlight.cta">Open the protocol matrix</a>
+          </div>
+          <div class="spotlight-visual reveal">
+            <div class="matrix-mini">
+              <div class="mm-row">
+                <span class="mm-label" data-i18n="mm.row1">Movement</span>
+                <span class="mm-bar"><span class="mm-seg s1" style="width:38%"></span><span class="mm-seg s3" style="width:42%"></span><span class="mm-seg s2" style="width:20%"></span></span>
+              </div>
+              <div class="mm-row">
+                <span class="mm-label" data-i18n="mm.row2">Sleep</span>
+                <span class="mm-bar"><span class="mm-seg s2" style="width:62%"></span><span class="mm-seg s1" style="width:38%"></span></span>
+              </div>
+              <div class="mm-row">
+                <span class="mm-label" data-i18n="mm.row3">Nutrition</span>
+                <span class="mm-bar"><span class="mm-seg s3" style="width:24%"></span><span class="mm-seg s2" style="width:46%"></span><span class="mm-seg s1" style="width:30%"></span></span>
+              </div>
+              <div class="mm-row">
+                <span class="mm-label" data-i18n="spotlight.visTitle">Recovery-cycle timing</span>
+                <span class="mm-bar"><span class="mm-seg s1" style="width:30%"></span><span class="mm-seg s3" style="width:50%"></span><span class="mm-seg s2" style="width:20%"></span></span>
+              </div>
+              <p class="mm-caption" data-i18n="spotlight.visCaption">Load and recovery, balanced across the week.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============= Lösung 2: Superkompensation / Muskelaufbau ============= -->
+    <section class="section" id="muscle">
+      <div class="container">
+        <div class="sc-intro reveal">
+          <span class="eyebrow" data-i18n="muscle.eyebrow">For serious training</span>
+          <h2 data-i18n="muscle.title">Build muscle on the supercompensation curve</h2>
+          <p class="lead" data-i18n="muscle.lead">Train hard, recover, then hit the sweet spot — not too early, not too late. circady models the supercompensation curve for hypertrophy, so every session lands when your body is ready to grow.</p>
+          <ul class="checklist">
+            <li data-i18n="muscle.p1">Tune the recovery and sweet-spot windows to your own training.</li>
+            <li data-i18n="muscle.p2">See every cycle: stimulus, recovery dip, supercompensation peak.</li>
+            <li data-i18n="muscle.p3">Repeat it right and adaptation compounds — cycle after cycle.</li>
+          </ul>
+        </div>
+        <div class="sc-row reveal">
+          <!-- Original-App-Screenshot der Superkompensations-Einstellung -->
+          <figure class="sc-figure">
+            <div class="sc-frame">
+              <img src="assets/supercompensation-app.png" alt="circady supercompensation cycle editor" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+              <div class="sc-ph" style="display:none">
+                <span class="sc-ph-title">App-Screenshot</span>
+                <small>assets/supercompensation-app.png</small>
+              </div>
+            </div>
+            <figcaption data-i18n="muscle.capApp">In the app — set your own recovery cycle</figcaption>
+          </figure>
+          <!-- Zweite Grafik: Superkompensationsprinzip über mehrere Zyklen -->
+          <figure class="sc-figure">
+            <div class="sc-frame">
+              <img src="assets/supercompensation-cycles.png" alt="Supercompensation across multiple training cycles" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+              <div class="sc-ph" style="display:none">
+                <span class="sc-ph-title">Grafik</span>
+                <small>assets/supercompensation-cycles.png</small>
+              </div>
+            </div>
+            <figcaption data-i18n="muscle.capPrinciple">The principle continued — well-timed cycles stack into lasting growth</figcaption>
+            <p class="sc-explain" data-i18n="muscle.scExplain">After a hard training stimulus, your performance first dips while your body recovers. It then rebounds above the starting level — this overshoot is supercompensation. Train again right at that peak and the gains stack up; too early or too late, and progress stalls.</p>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============= Lösung 3: Individuelle Routinen ============= -->
+    <section class="section section--alt" id="routines">
+      <div class="container">
+        <div class="spotlight">
+          <div class="reveal">
+            <span class="eyebrow" data-i18n="custom.eyebrow">Made to fit you</span>
+            <h2 data-i18n="custom.title">Or design it entirely your way</h2>
+            <p class="lead" data-i18n="custom.lead">Templates not your thing? Build routines from scratch — your own protocols, your timing, your goals. circady bends to your life, not the other way around.</p>
+            <ul class="checklist">
+              <li data-i18n="custom.p1">Create unlimited custom routines, named and organised your way.</li>
+              <li data-i18n="custom.p2">Set the cadence yourself — daily habits or longer recovery cycles.</li>
+              <li data-i18n="custom.p3">Mix curated protocols with your own into one coherent plan.</li>
+            </ul>
+          </div>
+          <div class="reveal">
+            <div class="builder-mock">
+              <div class="bm-heading" data-i18n="custom.bmHeading">Custom routine</div>
+              <div class="bm-field"><span data-i18n="custom.bmName">Name</span><span class="bm-val">Mobility Flow</span></div>
+              <div class="bm-field"><span data-i18n="custom.bmArea">Area</span><span class="bm-val" data-i18n="custom.bmAreaV">Movement</span></div>
+              <div class="bm-field"><span data-i18n="custom.bmRepeat">Repeat</span><span class="bm-val" data-i18n="custom.bmRepeatV">Every 2 days</span></div>
+              <div class="bm-field"><span data-i18n="custom.bmReminder">Reminder</span><span class="bm-toggle" aria-hidden="true"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== Download / QR ===================== -->
+    <section class="section" id="download">
+      <div class="container">
+        <div class="download-box reveal">
+          <!-- QR-Code: Platzhalter. Sobald die App-Store-URL feststeht,
+               hier ein QR-Bild (assets/qr.png) oder generierten Code einsetzen. -->
+          <div class="qr">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 21v.01M17 21h.01M21 17h.01"/></svg>
+            <small data-i18n="download.qrNote">QR code follows once the app is published</small>
+          </div>
+          <div class="download-text">
+            <span class="eyebrow" data-i18n="download.eyebrow">Get circady</span>
+            <h2 data-i18n="download.title">Start your longevity routine</h2>
+            <p class="lead" data-i18n="download.lead">circady is coming to the App Store. Scan the code or use the badge below to download — soon on iPhone.</p>
+            <div class="download-actions">
+              <a class="appstore-badge" href="#" aria-label="Download on the App Store">
+                <svg viewBox="0 0 384 512" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+                <span class="ab-text">
+                  <span class="ab-small">Download on the</span>
+                  <span class="ab-big">App Store</span>
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================== Footer ===================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img src="assets/app-icon.png" alt="">
+          <span class="brand-name">circady</span>
+        </div>
+        <nav class="footer-links" aria-label="Footer">
+          <a href="protocols.html" data-i18n="footer.protocols">Protocols</a>
+          <a href="support.html" data-i18n="footer.support">Support</a>
+          <a href="privacy.html" data-i18n="footer.privacy">Privacy Policy</a>
+          <a href="imprint.html" data-i18n="footer.imprint">Imprint</a>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <p data-i18n="footer.disclaimer">circady supports healthy habits and is not a medical device. It does not provide medical advice, diagnosis or treatment.</p>
+        <p class="footer-pillars" data-i18n="footer.pillars">Movement · Mind · Sleep · Social · Nutrition · Molecules</p>
+        <p data-i18n="footer.copyright">© 2026 circady. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/i18n.js"></script>
+</body>
+</html>
