@@ -717,6 +717,62 @@ h3 { font-size: clamp(20px, 2.4vw, 26px); line-height: 1.2; }
   .btn, .card, .appstore-badge { transition: none; }
 }
 
+/* === Kontaktformular === */
+.contact-card { text-align: left; }
+.contact-form { margin-top: 4px; }
+.form-row { margin-bottom: 16px; text-align: left; }
+.form-row label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+}
+.contact-form input,
+.contact-form select,
+.contact-form textarea {
+  width: 100%;
+  font-family: var(--font);
+  font-size: 16px;
+  color: var(--ink);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.contact-form textarea { resize: vertical; min-height: 120px; line-height: 1.5; }
+.contact-form input::placeholder,
+.contact-form textarea::placeholder { color: var(--ink-faint); }
+.contact-form input:focus,
+.contact-form select:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.contact-form select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none' stroke='%238a8a85' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m1 1 5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 38px;
+}
+.contact-form button[type="submit"] { margin-top: 4px; }
+.contact-form button[type="submit"]:disabled { opacity: 0.6; cursor: default; }
+/* Honeypot — für Menschen unsichtbar */
+.contact-form .hp-field {
+  position: absolute !important;
+  left: -9999px !important;
+  width: 1px; height: 1px;
+  opacity: 0;
+}
+.form-status { margin-top: 14px; font-size: 15px; text-align: center; min-height: 1.2em; }
+.form-status.is-pending { color: var(--ink-soft); }
+.form-status.is-success { color: var(--accent); font-weight: 600; }
+.form-status.is-error   { color: #b3261e; font-weight: 600; }
+
 /* === Tastatur-Fokus === */
 :focus-visible {
   outline: 3px solid var(--accent);

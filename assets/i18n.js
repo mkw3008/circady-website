@@ -92,8 +92,24 @@
 
       "support.title": "How can we help?",
       "support.lead": "Questions, feedback or trouble with circady? We're here for you.",
-      "support.emailTitle": "Email us",
+      "support.emailTitle": "Send us a message",
       "support.emailBody": "Reach the circady team directly. We reply within 48 hours on business days.",
+      "support.fName": "Name",
+      "support.fEmail": "Your email",
+      "support.fTopic": "Topic",
+      "support.fTopicGeneral": "General question",
+      "support.fTopicBug": "Bug / problem",
+      "support.fTopicAccount": "Account & data",
+      "support.fTopicFeedback": "Feedback / idea",
+      "support.fTopicOther": "Other",
+      "support.fMessage": "Message",
+      "support.fSubmit": "Send message",
+      "support.phName": "Your name",
+      "support.phEmail": "you@example.com",
+      "support.phMessage": "How can we help?",
+      "support.formSending": "Sending…",
+      "support.formSuccess": "Thanks! Your message has been sent — we'll reply within 48 hours on business days.",
+      "support.formError": "Something went wrong. Please try again in a moment.",
       "support.faqTitle": "Frequently asked questions",
       "support.q1": "Which devices does circady support?",
       "support.a1": "circady is built for iPhone and requires a current version of iOS.",
@@ -193,8 +209,24 @@
 
       "support.title": "Wie können wir helfen?",
       "support.lead": "Fragen, Feedback oder Probleme mit circady? Wir sind für dich da.",
-      "support.emailTitle": "Schreib uns",
+      "support.emailTitle": "Schreib uns eine Nachricht",
       "support.emailBody": "Erreiche das circady-Team direkt. Wir antworten an Werktagen innerhalb von 48 Stunden.",
+      "support.fName": "Name",
+      "support.fEmail": "Deine E-Mail",
+      "support.fTopic": "Thema",
+      "support.fTopicGeneral": "Allgemeine Frage",
+      "support.fTopicBug": "Fehler / Problem",
+      "support.fTopicAccount": "Konto & Daten",
+      "support.fTopicFeedback": "Feedback / Idee",
+      "support.fTopicOther": "Sonstiges",
+      "support.fMessage": "Nachricht",
+      "support.fSubmit": "Nachricht senden",
+      "support.phName": "Dein Name",
+      "support.phEmail": "du@beispiel.de",
+      "support.phMessage": "Wie können wir helfen?",
+      "support.formSending": "Wird gesendet…",
+      "support.formSuccess": "Danke! Deine Nachricht wurde gesendet — wir antworten an Werktagen innerhalb von 48 Stunden.",
+      "support.formError": "Etwas ist schiefgelaufen. Bitte versuche es gleich noch einmal.",
       "support.faqTitle": "Häufige Fragen",
       "support.q1": "Welche Geräte unterstützt circady?",
       "support.a1": "circady ist für das iPhone gebaut und benötigt eine aktuelle iOS-Version.",
@@ -226,6 +258,12 @@
     for (var i = 0; i < nodes.length; i++) {
       var key = nodes[i].getAttribute("data-i18n");
       if (dict[key] != null) nodes[i].textContent = dict[key];
+    }
+    // Platzhalter (placeholder) übersetzen
+    var phs = document.querySelectorAll("[data-i18n-placeholder]");
+    for (var p = 0; p < phs.length; p++) {
+      var pk = phs[p].getAttribute("data-i18n-placeholder");
+      if (dict[pk] != null) phs[p].setAttribute("placeholder", dict[pk]);
     }
     // Sprachabhängige Inhaltsblöcke (z. B. Rechtstexte) ein-/ausblenden
     var blocks = document.querySelectorAll("[data-lang-content]");
@@ -265,5 +303,48 @@
       });
     }, { threshold: 0.12 });
     for (var s = 0; s < reveals.length; s++) io.observe(reveals[s]);
+  }
+
+  /* Kontaktformular (Web3Forms) — AJAX-Versand ohne Seitenwechsel */
+  var form = document.getElementById("support-form");
+  if (form) {
+    var statusEl = document.getElementById("cf-status");
+    var submitBtn = form.querySelector('button[type="submit"]');
+    var t = function (key) {
+      var dict = STR[current] || STR.en;
+      return dict[key] != null ? dict[key] : (STR.en[key] || "");
+    };
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+
+      statusEl.className = "form-status is-pending";
+      statusEl.textContent = t("support.formSending");
+      submitBtn.disabled = true;
+
+      var data = new FormData(form);
+      fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: data
+      })
+        .then(function (res) { return res.json().then(function (j) { return { ok: res.ok, body: j }; }); })
+        .then(function (r) {
+          if (r.ok && r.body && r.body.success) {
+            form.reset();
+            statusEl.className = "form-status is-success";
+            statusEl.textContent = t("support.formSuccess");
+          } else {
+            statusEl.className = "form-status is-error";
+            statusEl.textContent = t("support.formError");
+          }
+        })
+        .catch(function () {
+          statusEl.className = "form-status is-error";
+          statusEl.textContent = t("support.formError");
+        })
+        .then(function () { submitBtn.disabled = false; });
+    });
   }
 })();

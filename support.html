@@ -19,7 +19,6 @@
       </a>
       <ul class="nav-links">
         <li><a href="index.html#features" data-i18n="nav.features">Features</a></li>
-        <li><a href="protocols.html" data-i18n="nav.protocols">Protocols</a></li>
         <li><a href="support.html" data-i18n="nav.support">Support</a></li>
       </ul>
       <div class="nav-right">
@@ -41,15 +40,56 @@
     </section>
 
     <section class="container" style="padding-bottom:clamp(40px,7vw,80px)">
-      <!-- Kontakt -->
-      <div class="card reveal" style="max-width:720px;margin:0 auto;text-align:center">
+      <!-- Kontaktformular (sendet via Web3Forms an das interne Support-Postfach;
+           die Zieladresse steht NICHT im Code, nur der anonyme access_key). -->
+      <div class="card reveal contact-card" style="max-width:620px;margin:0 auto">
         <div class="ic" style="margin:0 auto 18px">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3 7 9 6 9-6"/></svg>
         </div>
-        <h3 data-i18n="support.emailTitle">Email us</h3>
-        <p data-i18n="support.emailBody" style="margin:9px auto 20px;max-width:440px">Reach the circady team directly. We reply within 48 hours on business days.</p>
-        <!-- Support-Mailadresse anpassen, falls abweichend -->
-        <a class="btn btn--primary" href="mailto:support@circady.app">support@circady.app</a>
+        <h3 data-i18n="support.emailTitle" style="text-align:center">Send us a message</h3>
+        <p data-i18n="support.emailBody" style="margin:9px auto 22px;max-width:440px;text-align:center">Reach the circady team directly. We reply within 48 hours on business days.</p>
+
+        <form id="support-form" class="contact-form" action="https://api.web3forms.com/submit" method="POST" novalidate>
+          <!-- Web3Forms-Zugang: hier den Access-Key von web3forms.com eintragen -->
+          <input type="hidden" name="access_key" value="9f74c489-8c3d-44ef-88d2-46dfe99c1034">
+          <input type="hidden" name="subject" value="Neue Support-Anfrage über circady.app">
+          <input type="hidden" name="from_name" value="circady Support-Formular">
+          <!-- Honeypot gegen Spam-Bots (für Menschen unsichtbar) -->
+          <input type="checkbox" name="botcheck" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+          <div class="form-row">
+            <label for="cf-name" data-i18n="support.fName">Name</label>
+            <input id="cf-name" name="name" type="text" required autocomplete="name"
+                   data-i18n-placeholder="support.phName" placeholder="Your name">
+          </div>
+
+          <div class="form-row">
+            <label for="cf-email" data-i18n="support.fEmail">Your email</label>
+            <input id="cf-email" name="email" type="email" required autocomplete="email"
+                   data-i18n-placeholder="support.phEmail" placeholder="you@example.com">
+          </div>
+
+          <div class="form-row">
+            <label for="cf-topic" data-i18n="support.fTopic">Topic</label>
+            <select id="cf-topic" name="topic">
+              <option value="General question"   data-i18n="support.fTopicGeneral">General question</option>
+              <option value="Bug / problem"      data-i18n="support.fTopicBug">Bug / problem</option>
+              <option value="Account &amp; data"  data-i18n="support.fTopicAccount">Account &amp; data</option>
+              <option value="Feedback / idea"    data-i18n="support.fTopicFeedback">Feedback / idea</option>
+              <option value="Other"              data-i18n="support.fTopicOther">Other</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <label for="cf-message" data-i18n="support.fMessage">Message</label>
+            <textarea id="cf-message" name="message" rows="5" required
+                      data-i18n-placeholder="support.phMessage" placeholder="How can we help?"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn--primary" style="width:100%" data-i18n="support.fSubmit">Send message</button>
+
+          <p id="cf-status" class="form-status" role="status" aria-live="polite"></p>
+        </form>
       </div>
 
       <!-- FAQ -->
@@ -93,7 +133,6 @@
           <span class="brand-name">circady</span>
         </div>
         <nav class="footer-links" aria-label="Footer">
-          <a href="protocols.html" data-i18n="footer.protocols">Protocols</a>
           <a href="support.html" data-i18n="footer.support">Support</a>
           <a href="privacy.html" data-i18n="footer.privacy">Privacy Policy</a>
           <a href="imprint.html" data-i18n="footer.imprint">Imprint</a>
