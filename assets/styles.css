@@ -772,6 +772,24 @@ h3 { font-size: clamp(20px, 2.4vw, 26px); line-height: 1.2; }
 .form-status.is-pending { color: var(--ink-soft); }
 .form-status.is-success { color: var(--accent); font-weight: 600; }
 .form-status.is-error   { color: #b3261e; font-weight: 600; }
+/* Bestätigung, wenn das Formular ausgeblendet ist */
+.form-status.is-standalone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-top: 0;
+  padding: 26px 8px;
+  font-size: 16.5px;
+  line-height: 1.5;
+  max-width: 420px;
+  margin-inline: auto;
+}
+.form-status .cf-check {
+  width: 54px;
+  height: 54px;
+  stroke: var(--accent);
+}
 
 /* === Tastatur-Fokus === */
 :focus-visible {

@@ -333,8 +333,17 @@
         .then(function (r) {
           if (r.ok && r.body && r.body.success) {
             form.reset();
-            statusEl.className = "form-status is-success";
-            statusEl.textContent = t("support.formSuccess");
+            // Gesamten Karteninhalt ausblenden, nur die Bestätigung bleibt sichtbar
+            var card = form.parentNode;
+            for (var c = 0; c < card.children.length; c++) {
+              if (card.children[c] !== statusEl) card.children[c].style.display = "none";
+            }
+            statusEl.className = "form-status is-success is-standalone";
+            statusEl.innerHTML =
+              '<svg class="cf-check" viewBox="0 0 24 24" fill="none" stroke-width="2.4" ' +
+              'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+              '<circle cx="12" cy="12" r="10"/><path d="m8 12 2.5 2.5L16 9"/></svg>' +
+              '<span>' + t("support.formSuccess") + '</span>';
           } else {
             statusEl.className = "form-status is-error";
             statusEl.textContent = t("support.formError");
