@@ -55,7 +55,7 @@
           Webseite: https://circady.app
         </p>
         <h2>2. Überblick</h2>
-        <p>circady speichert deine Inhalte primär lokal auf deinem Gerät. Für <strong>Account, Subscription-Verwaltung und optionale Inhalts-Synchronisation</strong> zwischen Geräten nutzen wir externe Dienste (Apple, RevenueCat, Supabase). Wir betreiben <strong>keinen eigenen Server</strong>, <strong>keine eigenen Analytics</strong>, <strong>keine eigene Werbung</strong>, <strong>kein eigenes Tracking</strong>.</p>
+        <p>circady speichert deine Inhalte primär lokal auf deinem Gerät. Für <strong>Account, Subscription-Verwaltung und optionale Inhalts-Synchronisation</strong> zwischen Geräten nutzen wir externe Dienste (Apple, Supabase). Wir betreiben <strong>keinen eigenen Server</strong>, <strong>keine eigenen Analytics</strong>, <strong>keine eigene Werbung</strong>, <strong>kein eigenes Tracking</strong>.</p>
         <p>Im Detail:</p>
         <table>
           <thead><tr><th>Bereich</th><th>Ort der Verarbeitung</th></tr></thead>
@@ -64,7 +64,7 @@
             <tr><td>HealthKit-Daten</td><td>dein iOS-Gerät (bleibt lokal)</td></tr>
             <tr><td>Account / Login</td><td>Apple („Mit Apple anmelden") + Supabase Auth</td></tr>
             <tr><td>Synchronisierte App-Inhalte</td><td>Supabase</td></tr>
-            <tr><td>Subscription / In-App-Käufe</td><td>Apple StoreKit + RevenueCat</td></tr>
+            <tr><td>Subscription / In-App-Käufe</td><td>Apple In-App-Purchase (StoreKit)</td></tr>
             <tr><td>Gerätedaten-Sync (optional)</td><td>iCloud (Apple)</td></tr>
             <tr><td>Crash- &amp; Diagnose-Daten</td><td>Apple (anonymisiert)</td></tr>
           </tbody>
@@ -96,23 +96,14 @@
         <p><strong>Was NICHT in Supabase landet:</strong></p>
         <ul>
           <li>HealthKit-Daten (bleiben lokal auf deinem Gerät)</li>
-          <li>Zahlungsdaten (gehen ausschließlich an Apple/RevenueCat)</li>
+          <li>Zahlungsdaten (gehen ausschließlich an Apple)</li>
         </ul>
         <p><strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung). Mit Supabase besteht ein Auftragsverarbeitungsvertrag (DPA) nach Art. 28 DSGVO.</p>
 
-        <h2>5. Abonnement-Verwaltung: Apple + RevenueCat</h2>
-        <p>Zahlungen und Subscriptions werden über <strong>Apple In-App-Purchase</strong> abgewickelt. Wir erhalten keine Kreditkarten- oder Bankdaten.</p>
-        <p>Zur technischen Verwaltung von Subscriptions und Berechtigungen nutzen wir <strong>RevenueCat</strong>.</p>
-        <p><strong>Anbieter:</strong> RevenueCat, Inc., 153 Townsend Street, Suite 600, San Francisco, CA 94107, USA</p>
-        <p>Webseite: <a href="https://www.revenuecat.com" target="_blank" rel="noopener">revenuecat.com</a> · Datenschutz: <a href="https://www.revenuecat.com/privacy" target="_blank" rel="noopener">revenuecat.com/privacy</a></p>
-        <p><strong>Verarbeitete Daten:</strong></p>
-        <ul>
-          <li>Anonyme RevenueCat-App-User-Kennung (verknüpft mit unserer Supabase-User-Kennung)</li>
-          <li>Subscription-Status, Transaktions-Events (Start, Erneuerung, Kündigung)</li>
-          <li>Land, Sprache, App-Version, ungefähre Geräteinformationen</li>
-        </ul>
-        <p><strong>Drittlandtransfer:</strong> USA. Übertragung erfolgt auf Basis der <strong>EU-Standardvertragsklauseln</strong> und (falls anwendbar) des EU-US Data Privacy Framework. Mit RevenueCat besteht ein DPA.</p>
-        <p><strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung — Bereitstellung kostenpflichtiger Funktionen).</p>
+        <h2>5. Abonnement-Verwaltung: Apple</h2>
+        <p>Zahlungen und Abonnements werden <strong>ausschließlich über Apple In-App-Purchase (StoreKit)</strong> abgewickelt. Wir erhalten <strong>keine Kreditkarten- oder Bankdaten</strong>; Kauf, Erneuerung und Kündigung verwaltet Apple über deinen App-Store-Account.</p>
+        <p>Den Abo-Status verarbeiten wir nur insoweit, wie es zur Freischaltung kostenpflichtiger Funktionen nötig ist. Einen <strong>Drittanbieter zur Abo-Verwaltung (z. B. RevenueCat) setzen wir nicht ein</strong>.</p>
+        <p><strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung — Bereitstellung kostenpflichtiger Funktionen). Ergänzend gelten Apples Datenschutzbestimmungen.</p>
 
         <h2>6. HealthKit-Integration</h2>
         <h3>Welche Daten?</h3>
@@ -134,7 +125,7 @@
           <li>Trends und Verlauf anzuzeigen</li>
         </ul>
         <h3>Übermittlung</h3>
-        <p><strong>HealthKit-Daten werden nicht an Supabase, RevenueCat oder andere Dritte übermittelt.</strong> Sie verlassen dein Gerät nicht (Ausnahme: Apples eigene HealthKit-iCloud-Synchronisation, die von dir in den iOS-Einstellungen gesteuert wird — wir haben darauf keinen Zugriff).</p>
+        <p><strong>HealthKit-Daten werden nicht an Supabase oder andere Dritte übermittelt.</strong> Sie verbleiben auf deinem Gerät bzw. in Apple Health und werden nicht an unsere Server übertragen (Ausnahme: Apples eigene HealthKit-iCloud-Synchronisation, die von dir in den iOS-Einstellungen gesteuert wird — wir haben darauf keinen Zugriff).</p>
         <h3>Widerruf</h3>
         <p>Du kannst deine Zustimmung jederzeit widerrufen unter <em>Einstellungen → Datenschutz &amp; Sicherheit → Health → circady</em>.</p>
         <p><strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. a und Art. 9 Abs. 2 lit. a DSGVO (ausdrückliche Einwilligung in die Verarbeitung von Gesundheitsdaten).</p>
@@ -208,7 +199,6 @@
           <tbody>
             <tr><td>Apple Inc.</td><td>Sign in with Apple, In-App-Purchase, HealthKit, iCloud, App-Diagnostik</td><td>USA / weltweit</td><td>Apple Developer Agreement</td></tr>
             <tr><td>Supabase, Inc.</td><td>Backend (Auth, Datenbank)</td><td>EU — Frankfurt am Main (Deutschland); Muttergesellschaft USA, SCCs</td><td>Ja</td></tr>
-            <tr><td>RevenueCat, Inc.</td><td>Subscription-Management</td><td>USA</td><td>Ja, SCCs</td></tr>
             <tr><td>GitHub, Inc. (GitHub Pages)</td><td>Webseite-Hosting</td><td>USA (SCCs / EU-US Data Privacy Framework)</td><td>Ja</td></tr>
             <tr><td>Web3Forms</td><td>Übermittlung der Kontaktformular-Anfragen (nur Support)</td><td>USA (SCCs / EU-US Data Privacy Framework)</td><td>Anbieterbedingungen</td></tr>
             <tr><td>Google LLC (Gmail)</td><td>Empfang der Support-Anfragen (internes Postfach)</td><td>USA (SCCs / EU-US Data Privacy Framework)</td><td>Anbieterbedingungen</td></tr>
@@ -219,7 +209,7 @@
         <ul>
           <li><strong>Lokale App-Daten:</strong> so lange, wie du die App installiert hast bzw. die Daten nicht löschst.</li>
           <li><strong>Account- und synchronisierte Daten in Supabase:</strong> bis du dein Account in der App löschst oder uns per E-Mail um Löschung bittest.</li>
-          <li><strong>Subscription-Daten in RevenueCat:</strong> entsprechend der Aufbewahrungsfristen von RevenueCat und den steuerlichen Aufbewahrungspflichten von Apple.</li>
+          <li><strong>Abonnement-Daten:</strong> werden von Apple im Rahmen deines App-Store-Accounts und der steuerlichen Aufbewahrungspflichten verwaltet.</li>
           <li><strong>HealthKit-Daten:</strong> unverändert in Apples Health-App; werden von circady nicht persistiert.</li>
           <li><strong>Webseiten-Logs:</strong> entsprechend der Aufbewahrungsfristen des Hosting-Anbieters.</li>
         </ul>
@@ -236,7 +226,7 @@
           <li><strong>Widerspruch</strong> (Art. 21 DSGVO)</li>
           <li><strong>Widerruf von Einwilligungen</strong> (Art. 7 Abs. 3 DSGVO), wirksam für die Zukunft</li>
         </ul>
-        <p>Account-Löschung kannst du jederzeit direkt in der App über <em>Einstellungen → Account → Konto löschen</em> anstoßen. Für alle weiteren Anfragen: circady.support@gmail.com</p>
+        <p>Zur Löschung deines Accounts und aller zugehörigen Daten genügt eine formlose Nachricht an <a href="mailto:circady.support@gmail.com">circady.support@gmail.com</a> — wir löschen sie dann unverzüglich. Dieselbe Adresse gilt für alle weiteren Anfragen.</p>
         <h3>Beschwerderecht</h3>
         <p>Du hast das Recht, dich bei einer Datenschutz-Aufsichtsbehörde zu beschweren, in der Regel in dem EU-Mitgliedstaat deines Wohnsitzes, deines Arbeitsplatzes oder des Orts des mutmaßlichen Verstoßes.</p>
         <p>Übersicht der deutschen Aufsichtsbehörden: <a href="https://www.bfdi.bund.de/DE/Service/Anschriften/anschriften_node.html" target="_blank" rel="noopener">bfdi.bund.de</a></p>
@@ -244,7 +234,7 @@
         <h2>15. Datensicherheit</h2>
         <ul>
           <li>Lokale App-Daten werden in der iOS-Sandbox gespeichert und durch geräteseitige Verschlüsselung (Data Protection) geschützt, sofern dein Gerät mit Code/Face ID/Touch ID gesichert ist.</li>
-          <li>Die Verbindungen zu Supabase, RevenueCat und Apple-Diensten erfolgen verschlüsselt über TLS.</li>
+          <li>Die Verbindungen zu Supabase und Apple-Diensten erfolgen verschlüsselt über TLS.</li>
           <li>Wir wählen Anbieter, die nach branchenüblichen Sicherheitsstandards (u. a. ISO 27001, SOC 2) zertifiziert sind, soweit das auf den jeweiligen Anbieter zutrifft.</li>
         </ul>
 
@@ -275,7 +265,7 @@
           Website: https://circady.app
         </p>
         <h2>2. Overview</h2>
-        <p>circady stores your content primarily locally on your device. For <strong>account, subscription management, and optional content synchronization</strong> across devices we use external services (Apple, RevenueCat, Supabase). We operate <strong>no own server</strong>, <strong>no own analytics</strong>, <strong>no own advertising</strong>, <strong>no own tracking</strong>.</p>
+        <p>circady stores your content primarily locally on your device. For <strong>account, subscription management, and optional content synchronization</strong> across devices we use external services (Apple, Supabase). We operate <strong>no own server</strong>, <strong>no own analytics</strong>, <strong>no own advertising</strong>, <strong>no own tracking</strong>.</p>
         <p>In detail:</p>
         <table>
           <thead><tr><th>Area</th><th>Location of processing</th></tr></thead>
@@ -284,7 +274,7 @@
             <tr><td>HealthKit data</td><td>your iOS device (stays local)</td></tr>
             <tr><td>Account / login</td><td>Apple („Sign in with Apple") + Supabase Auth</td></tr>
             <tr><td>Synchronized app content</td><td>Supabase</td></tr>
-            <tr><td>Subscription / In-App-Purchases</td><td>Apple StoreKit + RevenueCat</td></tr>
+            <tr><td>Subscription / In-App-Purchases</td><td>Apple In-App-Purchase (StoreKit)</td></tr>
             <tr><td>Device data sync (optional)</td><td>iCloud (Apple)</td></tr>
             <tr><td>Crash &amp; diagnostics data</td><td>Apple (anonymized)</td></tr>
           </tbody>
@@ -316,23 +306,14 @@
         <p><strong>What does NOT go to Supabase:</strong></p>
         <ul>
           <li>HealthKit data (stays local on your device)</li>
-          <li>Payment data (only goes to Apple/RevenueCat)</li>
+          <li>Payment data (only goes to Apple)</li>
         </ul>
         <p><strong>Legal basis:</strong> Art. 6(1)(b) GDPR (contract performance). A Data Processing Agreement (DPA) under Art. 28 GDPR is in place with Supabase.</p>
 
-        <h2>5. Subscription Management: Apple + RevenueCat</h2>
-        <p>Payments and subscriptions are processed via <strong>Apple In-App-Purchase</strong>. We do not receive credit card or banking data.</p>
-        <p>For technical management of subscriptions and entitlements we use <strong>RevenueCat</strong>.</p>
-        <p><strong>Provider:</strong> RevenueCat, Inc., 153 Townsend Street, Suite 600, San Francisco, CA 94107, USA</p>
-        <p>Website: <a href="https://www.revenuecat.com" target="_blank" rel="noopener">revenuecat.com</a> · Privacy: <a href="https://www.revenuecat.com/privacy" target="_blank" rel="noopener">revenuecat.com/privacy</a></p>
-        <p><strong>Data processed:</strong></p>
-        <ul>
-          <li>Anonymous RevenueCat App User ID (linked to our Supabase user ID)</li>
-          <li>Subscription status, transaction events (start, renewal, cancellation)</li>
-          <li>Country, language, app version, approximate device info</li>
-        </ul>
-        <p><strong>Third-country transfer:</strong> USA. Transfer is based on <strong>EU Standard Contractual Clauses</strong> and (where applicable) the EU-US Data Privacy Framework. A DPA is in place with RevenueCat.</p>
-        <p><strong>Legal basis:</strong> Art. 6(1)(b) GDPR (contract performance — providing paid features).</p>
+        <h2>5. Subscription Management: Apple</h2>
+        <p>Payments and subscriptions are processed <strong>exclusively via Apple In-App-Purchase (StoreKit)</strong>. We do <strong>not receive credit card or banking data</strong>; purchase, renewal, and cancellation are managed by Apple through your App Store account.</p>
+        <p>We process subscription status only to the extent needed to unlock paid features. We do <strong>not use a third-party subscription-management provider (e.g. RevenueCat)</strong>.</p>
+        <p><strong>Legal basis:</strong> Art. 6(1)(b) GDPR (contract performance — providing paid features). Apple's privacy terms additionally apply.</p>
 
         <h2>6. HealthKit Integration</h2>
         <h3>What data?</h3>
@@ -354,7 +335,7 @@
           <li>Display trends and history</li>
         </ul>
         <h3>Transmission</h3>
-        <p><strong>HealthKit data is not transmitted to Supabase, RevenueCat, or any other third party.</strong> It does not leave your device (exception: Apple's own HealthKit iCloud sync, controlled by you in iOS Settings — we have no access to it).</p>
+        <p><strong>HealthKit data is not transmitted to Supabase or any other third party.</strong> It stays on your device or within Apple Health and is not transmitted to our servers (exception: Apple's own HealthKit iCloud sync, controlled by you in iOS Settings — we have no access to it).</p>
         <h3>Withdrawal of consent</h3>
         <p>You can withdraw your consent at any time under <em>Settings → Privacy &amp; Security → Health → circady</em>.</p>
         <p><strong>Legal basis:</strong> Art. 6(1)(a) and Art. 9(2)(a) GDPR (explicit consent for processing of health data).</p>
@@ -428,7 +409,6 @@
           <tbody>
             <tr><td>Apple Inc.</td><td>Sign in with Apple, In-App-Purchase, HealthKit, iCloud, app diagnostics</td><td>USA / worldwide</td><td>Apple Developer Agreement</td></tr>
             <tr><td>Supabase, Inc.</td><td>Backend (auth, database)</td><td>EU — Frankfurt am Main (Germany); parent company USA, SCCs</td><td>Yes</td></tr>
-            <tr><td>RevenueCat, Inc.</td><td>Subscription management</td><td>USA</td><td>Yes, SCCs</td></tr>
             <tr><td>GitHub, Inc. (GitHub Pages)</td><td>Website hosting</td><td>USA (SCCs / EU-US Data Privacy Framework)</td><td>Yes</td></tr>
             <tr><td>Web3Forms</td><td>Delivery of contact-form requests (support only)</td><td>USA (SCCs / EU-US Data Privacy Framework)</td><td>Provider terms</td></tr>
             <tr><td>Google LLC (Gmail)</td><td>Receipt of support requests (internal inbox)</td><td>USA (SCCs / EU-US Data Privacy Framework)</td><td>Provider terms</td></tr>
@@ -439,7 +419,7 @@
         <ul>
           <li><strong>Local app data:</strong> for as long as the app is installed, or until you delete the data yourself.</li>
           <li><strong>Account and synchronized data in Supabase:</strong> until you delete your account in the app or request deletion by email.</li>
-          <li><strong>Subscription data in RevenueCat:</strong> per RevenueCat's retention policy and Apple's tax-related retention obligations.</li>
+          <li><strong>Subscription data:</strong> managed by Apple within your App Store account and applicable tax retention obligations.</li>
           <li><strong>HealthKit data:</strong> unchanged in Apple's Health app; not persisted by circady.</li>
           <li><strong>Website logs:</strong> per the hosting provider's retention policy.</li>
         </ul>
@@ -456,7 +436,7 @@
           <li><strong>Objection</strong> (Art. 21 GDPR)</li>
           <li><strong>Withdrawal of consent</strong> (Art. 7(3) GDPR), effective for the future</li>
         </ul>
-        <p>Account deletion can be triggered directly in the app under <em>Settings → Account → Delete Account</em>. For all other requests: circady.support@gmail.com</p>
+        <p>To delete your account and all associated data, send an informal message to <a href="mailto:circady.support@gmail.com">circady.support@gmail.com</a> — we will then delete them without undue delay. The same address applies to all other requests.</p>
         <h3>Right to lodge a complaint</h3>
         <p>You have the right to lodge a complaint with a data protection supervisory authority, usually in the EU Member State of your residence, place of work, or the place of the alleged infringement.</p>
         <p>For California residents (CCPA): you have additional rights, including the right to know, delete, and opt out of the sale of personal information. circady does not sell personal information.</p>
@@ -464,7 +444,7 @@
         <h2>15. Data Security</h2>
         <ul>
           <li>Local app data is stored in the iOS sandbox and protected by device-level encryption (Data Protection), provided your device is secured with a passcode/Face ID/Touch ID.</li>
-          <li>Connections to Supabase, RevenueCat, and Apple services are encrypted via TLS.</li>
+          <li>Connections to Supabase and Apple services are encrypted via TLS.</li>
           <li>We select providers certified to industry-standard security frameworks (such as ISO 27001, SOC 2) where applicable to the respective provider.</li>
         </ul>
 
