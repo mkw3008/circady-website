@@ -793,6 +793,10 @@ h3 { font-size: clamp(20px, 2.4vw, 26px); line-height: 1.2; }
   stroke: var(--accent);
 }
 
+/* Dezente Pflichtangaben (Impressum / Verantwortlicher) — zurückhaltend, aber lesbar */
+.legal-min { font-size: 12px; line-height: 1.55; color: var(--ink-faint); }
+.legal-min a { color: var(--ink-faint); text-decoration: underline; }
+
 /* === Tastatur-Fokus === */
 :focus-visible {
   outline: 3px solid var(--accent);
