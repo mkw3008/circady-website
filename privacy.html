@@ -61,7 +61,7 @@
           <thead><tr><th>Bereich</th><th>Ort der Verarbeitung</th></tr></thead>
           <tbody>
             <tr><td>Routinen, Logs, Settings (lokal)</td><td>dein iOS-Gerät</td></tr>
-            <tr><td>HealthKit-Daten</td><td>dein iOS-Gerät (bleibt lokal)</td></tr>
+            <tr><td>HealthKit-Daten</td><td>dein Gerät und Apple Health (nicht auf unseren Servern)</td></tr>
             <tr><td>Account / Login</td><td>Apple („Mit Apple anmelden") + Supabase Auth</td></tr>
             <tr><td>Synchronisierte App-Inhalte</td><td>Supabase</td></tr>
             <tr><td>Subscription / In-App-Käufe</td><td>Apple In-App-Purchase (StoreKit)</td></tr>
@@ -95,7 +95,7 @@
         </ul>
         <p><strong>Was NICHT in Supabase landet:</strong></p>
         <ul>
-          <li>HealthKit-Daten (bleiben lokal auf deinem Gerät)</li>
+          <li>HealthKit-Daten (werden nicht in Supabase gespeichert; Verarbeitung auf dem Gerät und in Apple Health)</li>
           <li>Zahlungsdaten (gehen ausschließlich an Apple)</li>
         </ul>
         <p><strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung). Mit Supabase besteht ein Auftragsverarbeitungsvertrag (DPA) nach Art. 28 DSGVO.</p>
@@ -116,9 +116,9 @@
           <li>Herzfrequenzvariabilität (HRV)</li>
           <li>Ruheherzfrequenz (RHR)</li>
         </ul>
-        <p>circady kann optional <strong>schreibend</strong> Routinen-Abschlüsse in HealthKit ablegen, sofern du dies erlaubst.</p>
+        <p>Mit deiner Erlaubnis schreibt circady außerdem <strong>Routine-Abschlüsse in Apple Health zurück</strong> (schreibender Zugriff). Diese Einträge liegen anschließend in Apple Health und können über Apples eigene, von dir gesteuerte iCloud-Synchronisation zwischen deinen Geräten abgeglichen werden.</p>
         <h3>Verarbeitung</h3>
-        <p>HealthKit-Daten werden <strong>ausschließlich lokal</strong> auf deinem Gerät verarbeitet, um:</p>
+        <p>circady verarbeitet die gelesenen HealthKit-Daten <strong>auf deinem Gerät</strong>, um:</p>
         <ul>
           <li>Routinen automatisch als erledigt zu markieren</li>
           <li>Deinen Longevity Index zu berechnen</li>
@@ -226,7 +226,7 @@
           <li><strong>Widerspruch</strong> (Art. 21 DSGVO)</li>
           <li><strong>Widerruf von Einwilligungen</strong> (Art. 7 Abs. 3 DSGVO), wirksam für die Zukunft</li>
         </ul>
-        <p>Zur Löschung deines Accounts und aller zugehörigen Daten genügt eine formlose Nachricht an <a href="mailto:circady.support@gmail.com">circady.support@gmail.com</a> — wir löschen sie dann unverzüglich. Dieselbe Adresse gilt für alle weiteren Anfragen.</p>
+        <p>Du kannst dein Konto und alle zugehörigen Daten jederzeit <strong>direkt in der App löschen</strong>: <em>Einstellungen → Account → Konto löschen</em>. Die Löschung entfernt deinen Account und alle in Supabase gespeicherten Inhalte unverzüglich und vollständig. Alternativ genügt eine Nachricht an <a href="mailto:circady.support@gmail.com">circady.support@gmail.com</a>; dieselbe Adresse gilt für alle weiteren Anfragen.</p>
         <h3>Beschwerderecht</h3>
         <p>Du hast das Recht, dich bei einer Datenschutz-Aufsichtsbehörde zu beschweren, in der Regel in dem EU-Mitgliedstaat deines Wohnsitzes, deines Arbeitsplatzes oder des Orts des mutmaßlichen Verstoßes.</p>
         <p>Übersicht der deutschen Aufsichtsbehörden: <a href="https://www.bfdi.bund.de/DE/Service/Anschriften/anschriften_node.html" target="_blank" rel="noopener">bfdi.bund.de</a></p>
@@ -271,7 +271,7 @@
           <thead><tr><th>Area</th><th>Location of processing</th></tr></thead>
           <tbody>
             <tr><td>Routines, logs, settings (local)</td><td>your iOS device</td></tr>
-            <tr><td>HealthKit data</td><td>your iOS device (stays local)</td></tr>
+            <tr><td>HealthKit data</td><td>your device and Apple Health (not on our servers)</td></tr>
             <tr><td>Account / login</td><td>Apple („Sign in with Apple") + Supabase Auth</td></tr>
             <tr><td>Synchronized app content</td><td>Supabase</td></tr>
             <tr><td>Subscription / In-App-Purchases</td><td>Apple In-App-Purchase (StoreKit)</td></tr>
@@ -305,7 +305,7 @@
         </ul>
         <p><strong>What does NOT go to Supabase:</strong></p>
         <ul>
-          <li>HealthKit data (stays local on your device)</li>
+          <li>HealthKit data (not stored in Supabase; processed on your device and in Apple Health)</li>
           <li>Payment data (only goes to Apple)</li>
         </ul>
         <p><strong>Legal basis:</strong> Art. 6(1)(b) GDPR (contract performance). A Data Processing Agreement (DPA) under Art. 28 GDPR is in place with Supabase.</p>
@@ -326,9 +326,9 @@
           <li>Heart Rate Variability (HRV)</li>
           <li>Resting Heart Rate (RHR)</li>
         </ul>
-        <p>circady can optionally <strong>write</strong> routine completions to HealthKit, if you allow it.</p>
+        <p>With your permission, circady also <strong>writes routine completions back into Apple Health</strong> (write access). These entries then reside in Apple Health and may be synced across your devices via Apple's own iCloud sync, which you control.</p>
         <h3>Processing</h3>
-        <p>HealthKit data is processed <strong>only on your device</strong>, in order to:</p>
+        <p>circady processes the HealthKit data it reads <strong>on your device</strong>, in order to:</p>
         <ul>
           <li>Auto-complete routines</li>
           <li>Calculate your Longevity Index</li>
@@ -436,7 +436,7 @@
           <li><strong>Objection</strong> (Art. 21 GDPR)</li>
           <li><strong>Withdrawal of consent</strong> (Art. 7(3) GDPR), effective for the future</li>
         </ul>
-        <p>To delete your account and all associated data, send an informal message to <a href="mailto:circady.support@gmail.com">circady.support@gmail.com</a> — we will then delete them without undue delay. The same address applies to all other requests.</p>
+        <p>You can <strong>delete your account and all associated data directly in the app</strong>: <em>Settings → Account → Delete Account</em>. Deletion removes your account and all content stored in Supabase promptly and completely. Alternatively, send a message to <a href="mailto:circady.support@gmail.com">circady.support@gmail.com</a>; the same address applies to all other requests.</p>
         <h3>Right to lodge a complaint</h3>
         <p>You have the right to lodge a complaint with a data protection supervisory authority, usually in the EU Member State of your residence, place of work, or the place of the alleged infringement.</p>
         <p>For California residents (CCPA): you have additional rights, including the right to know, delete, and opt out of the sale of personal information. circady does not sell personal information.</p>

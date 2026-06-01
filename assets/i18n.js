@@ -113,16 +113,14 @@
       "support.faqTitle": "Frequently asked questions",
       "support.q1": "Which devices does circady support?",
       "support.a1": "circady is built for iPhone and requires a current version of iOS.",
-      "support.q2": "Do I need an account?",
-      "support.a2": "[Placeholder] Describe here whether circady requires an account and which data it stores.",
       "support.q3": "How do I delete my account and data?",
-      "support.a3": "[Placeholder] If circady offers accounts, document the in-app deletion path here (required by Apple) and a contact route for web-based deletion.",
+      "support.a3": "Open the app and go to Settings → Account → Delete Account. This removes your account and all associated data promptly and completely. Alternatively, email circady.support@gmail.com and we'll delete everything for you.",
       "support.q4": "Is circady a medical product?",
       "support.a4": "No. circady helps you organise healthy routines and does not provide medical advice, diagnosis or treatment.",
       "support.q5": "How is my data handled?",
       "support.a5": "See our Privacy Policy for full details on data processing.",
       "support.deleteTitle": "Account deletion",
-      "support.deleteBody": "[Placeholder] Document the account-deletion process here. Apple requires apps with account creation to offer in-app account deletion."
+      "support.deleteBody": "You can delete your account and all associated data at any time, directly in the app: Settings → Account → Delete Account. Deletion is immediate and complete — your account and all content stored on our backend (Supabase) are removed. If you can't access the app, email circady.support@gmail.com and we'll delete your account for you. Note: deleting your account does not cancel an active App Store subscription — manage that under your Apple ID in the App Store."
     },
     de: {
       "nav.features": "Lösungen",
@@ -230,16 +228,14 @@
       "support.faqTitle": "Häufige Fragen",
       "support.q1": "Welche Geräte unterstützt circady?",
       "support.a1": "circady ist für das iPhone gebaut und benötigt eine aktuelle iOS-Version.",
-      "support.q2": "Brauche ich ein Konto?",
-      "support.a2": "[Platzhalter] Beschreibe hier, ob circady ein Konto benötigt und welche Daten dabei gespeichert werden.",
       "support.q3": "Wie lösche ich mein Konto und meine Daten?",
-      "support.a3": "[Platzhalter] Falls circady Konten anbietet, dokumentiere hier den In-App-Löschweg (von Apple verpflichtend) sowie einen Kontaktweg zur Löschung über das Web.",
+      "support.a3": "Öffne die App und gehe zu Einstellungen → Account → Konto löschen. Damit werden dein Konto und alle zugehörigen Daten unverzüglich und vollständig entfernt. Alternativ schreib uns an circady.support@gmail.com — wir löschen dann alles für dich.",
       "support.q4": "Ist circady ein Medizinprodukt?",
       "support.a4": "Nein. circady hilft dir, gesunde Routinen zu organisieren, und ersetzt keine medizinische Beratung, Diagnose oder Behandlung.",
       "support.q5": "Wie werden meine Daten verarbeitet?",
       "support.a5": "Details zur Datenverarbeitung findest du in unserer Datenschutzerklärung.",
       "support.deleteTitle": "Konto löschen",
-      "support.deleteBody": "[Platzhalter] Dokumentiere hier den Ablauf zur Kontolöschung. Apple verlangt für Apps mit Konto-Anlage eine In-App-Löschfunktion."
+      "support.deleteBody": "Du kannst dein Konto und alle zugehörigen Daten jederzeit direkt in der App löschen: Einstellungen → Account → Konto löschen. Die Löschung erfolgt sofort und vollständig — dein Konto und alle in unserem Backend (Supabase) gespeicherten Inhalte werden entfernt. Falls du keinen Zugriff auf die App hast, schreib an circady.support@gmail.com, dann löschen wir dein Konto für dich. Hinweis: Das Löschen des Kontos kündigt kein laufendes App-Store-Abo — das verwaltest du über deine Apple-ID im App Store."
     }
   };
 
