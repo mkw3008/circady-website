@@ -55,7 +55,7 @@
           Webseite: https://circady.app
         </p>
         <h2>2. Überblick</h2>
-        <p>circady speichert deine Inhalte primär lokal auf deinem Gerät. Für <strong>Account, Subscription-Verwaltung und optionale Inhalts-Synchronisation</strong> zwischen Geräten nutzen wir externe Dienste (Apple, Supabase). Wir betreiben <strong>keinen eigenen Server</strong>, <strong>keine eigenen Analytics</strong>, <strong>keine eigene Werbung</strong>, <strong>kein eigenes Tracking</strong>.</p>
+        <p>circady speichert deine Inhalte primär lokal auf deinem Gerät. Für <strong>Account, Subscription-Verwaltung und optionale Inhalts-Synchronisation</strong> zwischen Geräten nutzen wir externe Dienste (Apple, Supabase). Zur Verbesserung der App erheben wir zudem eine <strong>eigene, jederzeit abschaltbare Nutzungsanalyse</strong> in unserer Supabase-Datenbank (siehe Abschnitt 9). Wir betreiben <strong>keine eigene Werbung</strong> und <strong>kein Cross-App-Tracking</strong> und geben <strong>keine Daten an Werbenetzwerke weiter</strong>.</p>
         <p>Im Detail:</p>
         <table>
           <thead><tr><th>Bereich</th><th>Ort der Verarbeitung</th></tr></thead>
@@ -64,6 +64,7 @@
             <tr><td>HealthKit-Daten</td><td>dein Gerät und Apple Health (nicht auf unseren Servern)</td></tr>
             <tr><td>Account / Login</td><td>Apple („Mit Apple anmelden") + Supabase Auth</td></tr>
             <tr><td>Synchronisierte App-Inhalte</td><td>Supabase</td></tr>
+            <tr><td>Nutzungsanalyse (standardmäßig aktiv, abschaltbar)</td><td>Supabase</td></tr>
             <tr><td>Subscription / In-App-Käufe</td><td>Apple In-App-Purchase (StoreKit)</td></tr>
             <tr><td>Gerätedaten-Sync (optional)</td><td>iCloud (Apple)</td></tr>
             <tr><td>Crash- &amp; Diagnose-Daten</td><td>Apple (anonymisiert)</td></tr>
@@ -92,13 +93,14 @@
           <li>Apple-User-Kennung, E-Mail (siehe Abschnitt 3)</li>
           <li>Eigene App-Inhalte: Custom-Routinen, Logs, Einstellungen</li>
           <li>Technische Metadaten: Zeitpunkt der Erstellung/Änderung</li>
+          <li>Nutzungs-/Analyse-Ereignisse inkl. Einstellungs-Schnappschuss, sofern die Nutzungsanalyse aktiv ist (Details in Abschnitt 9)</li>
         </ul>
         <p><strong>Was NICHT in Supabase landet:</strong></p>
         <ul>
           <li>HealthKit-Daten (werden nicht in Supabase gespeichert; Verarbeitung auf dem Gerät und in Apple Health)</li>
           <li>Zahlungsdaten (gehen ausschließlich an Apple)</li>
         </ul>
-        <p><strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung). Mit Supabase besteht ein Auftragsverarbeitungsvertrag (DPA) nach Art. 28 DSGVO.</p>
+        <p><strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung) für Account- und synchronisierte Inhalte; für die Nutzungsanalyse Art. 6 Abs. 1 lit. f DSGVO (siehe Abschnitt 9). Mit Supabase besteht ein Auftragsverarbeitungsvertrag (DPA) nach Art. 28 DSGVO.</p>
 
         <h2>5. Abonnement-Verwaltung: Apple</h2>
         <p>Zahlungen und Abonnements werden <strong>ausschließlich über Apple In-App-Purchase (StoreKit)</strong> abgewickelt. Wir erhalten <strong>keine Kreditkarten- oder Bankdaten</strong>; Kauf, Erneuerung und Kündigung verwaltet Apple über deinen App-Store-Account.</p>
@@ -148,14 +150,18 @@
         <p><strong>Zweck:</strong> Fehlerdiagnose und Stabilitätsverbesserung der App.</p>
         <p><strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an Fehlerdiagnose). Da Apple die Daten vor Übermittlung anonymisiert und aggregiert, gilt eine zusätzliche Schutzschicht.</p>
 
-        <h2>9. Tracking, Werbung, Analytics</h2>
+        <h2>9. Nutzungsanalyse, Werbung, Tracking</h2>
+        <p>Zur Verbesserung von circady erheben wir eine <strong>eigene Nutzungsanalyse</strong> und speichern sie in unserer eigenen <strong>Supabase</strong>-Datenbank (Region Frankfurt, siehe Abschnitt 4). Wir setzen <strong>keine Analyse-Dienste Dritter</strong> ein (kein Firebase, kein Mixpanel, kein PostHog o. Ä.).</p>
+        <p><strong>Erfasste Ereignisse (u. a.):</strong> App-Start, Routine protokolliert, übersprungen, pausiert, fortgesetzt, hinzugefügt und archiviert, Onboarding abgeschlossen, HealthKit verbunden, Protokoll in „Discover" angesehen.</p>
+        <p>Zu jedem Ereignis speichern wir einen <strong>Schnappschuss deiner App-Einstellungen</strong> (z. B. Farbschema, ob HealthKit verbunden ist, Protokoll-Umfang). Diese Ereignisdaten sind mit deinem Account verknüpft und damit <strong>nicht anonym</strong>. Es werden <strong>keine HealthKit-Gesundheitswerte</strong> als Analyse-Ereignisse übertragen.</p>
+        <p><strong>Zweck:</strong> verstehen, wie die App genutzt wird, um Funktionen und Stabilität zu verbessern. <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an Produktverbesserung).</p>
+        <p><strong>Widerspruch / Opt-out:</strong> Die Nutzungsanalyse ist standardmäßig aktiv. Du kannst sie <strong>jederzeit in den App-Einstellungen deaktivieren</strong>; danach werden keine weiteren Analyse-Ereignisse mehr erhoben.</p>
+        <h3>Werbung &amp; Cross-App-Tracking</h3>
         <ul>
-          <li>Wir setzen <strong>keine eigenen Analytics</strong> ein (kein Firebase, kein Mixpanel, kein PostHog, etc.).</li>
           <li>Wir setzen <strong>keine Werbung</strong> ein.</li>
-          <li>Wir nutzen <strong>keine IDFA / kein Cross-App-Tracking</strong> und blenden daher <strong>keinen App-Tracking-Transparency-Dialog (ATT)</strong> ein.</li>
-          <li>Im Privacy-Manifest der App ist <code>NSPrivacyTracking = false</code> gesetzt.</li>
+          <li>Wir nutzen <strong>keine IDFA / kein Cross-App-Tracking</strong> und blenden daher <strong>keinen App-Tracking-Transparency-Dialog (ATT)</strong> ein. Die Nutzungsanalyse bleibt rein <strong>first-party</strong> (ausschließlich in unserer Supabase) und wird nicht mit Dritten zu Werbezwecken zusammengeführt.</li>
+          <li>Es findet <strong>keine Übermittlung von Daten an Werbenetzwerke oder Datenbroker</strong> statt.</li>
         </ul>
-        <p>Es findet <strong>keine Übermittlung von Daten an Werbenetzwerke oder Datenbroker</strong> statt.</p>
 
         <h2>10. App-Berechtigungen</h2>
         <p>circady fragt folgende Berechtigungen ab:</p>
@@ -265,7 +271,7 @@
           Website: https://circady.app
         </p>
         <h2>2. Overview</h2>
-        <p>circady stores your content primarily locally on your device. For <strong>account, subscription management, and optional content synchronization</strong> across devices we use external services (Apple, Supabase). We operate <strong>no own server</strong>, <strong>no own analytics</strong>, <strong>no own advertising</strong>, <strong>no own tracking</strong>.</p>
+        <p>circady stores your content primarily locally on your device. For <strong>account, subscription management, and optional content synchronization</strong> across devices we use external services (Apple, Supabase). To improve the app we also collect <strong>first-party usage analytics that you can switch off at any time</strong>, stored in our Supabase database (see Section 9). We run <strong>no advertising</strong> and <strong>no cross-app tracking</strong>, and we <strong>share no data with ad networks</strong>.</p>
         <p>In detail:</p>
         <table>
           <thead><tr><th>Area</th><th>Location of processing</th></tr></thead>
@@ -274,6 +280,7 @@
             <tr><td>HealthKit data</td><td>your device and Apple Health (not on our servers)</td></tr>
             <tr><td>Account / login</td><td>Apple („Sign in with Apple") + Supabase Auth</td></tr>
             <tr><td>Synchronized app content</td><td>Supabase</td></tr>
+            <tr><td>Usage analytics (on by default, can be disabled)</td><td>Supabase</td></tr>
             <tr><td>Subscription / In-App-Purchases</td><td>Apple In-App-Purchase (StoreKit)</td></tr>
             <tr><td>Device data sync (optional)</td><td>iCloud (Apple)</td></tr>
             <tr><td>Crash &amp; diagnostics data</td><td>Apple (anonymized)</td></tr>
@@ -302,13 +309,14 @@
           <li>Apple user identifier, email (see section 3)</li>
           <li>Your own app content: custom routines, logs, settings</li>
           <li>Technical metadata: creation/modification timestamps</li>
+          <li>Usage/analytics events incl. a settings snapshot, when usage analytics is enabled (details in Section 9)</li>
         </ul>
         <p><strong>What does NOT go to Supabase:</strong></p>
         <ul>
           <li>HealthKit data (not stored in Supabase; processed on your device and in Apple Health)</li>
           <li>Payment data (only goes to Apple)</li>
         </ul>
-        <p><strong>Legal basis:</strong> Art. 6(1)(b) GDPR (contract performance). A Data Processing Agreement (DPA) under Art. 28 GDPR is in place with Supabase.</p>
+        <p><strong>Legal basis:</strong> Art. 6(1)(b) GDPR (contract performance) for account and synchronized content; for usage analytics, Art. 6(1)(f) GDPR (see Section 9). A Data Processing Agreement (DPA) under Art. 28 GDPR is in place with Supabase.</p>
 
         <h2>5. Subscription Management: Apple</h2>
         <p>Payments and subscriptions are processed <strong>exclusively via Apple In-App-Purchase (StoreKit)</strong>. We do <strong>not receive credit card or banking data</strong>; purchase, renewal, and cancellation are managed by Apple through your App Store account.</p>
@@ -358,14 +366,18 @@
         <p><strong>Purpose:</strong> Error diagnosis and stability improvement.</p>
         <p><strong>Legal basis:</strong> Art. 6(1)(f) GDPR (legitimate interest in error diagnosis). Apple's anonymization and aggregation provide an additional protective layer.</p>
 
-        <h2>9. Tracking, Advertising, Analytics</h2>
+        <h2>9. Usage Analytics, Advertising, Tracking</h2>
+        <p>To improve circady we collect <strong>first-party usage analytics</strong> and store them in our own <strong>Supabase</strong> database (Frankfurt region, see Section 4). We use <strong>no third-party analytics services</strong> (no Firebase, no Mixpanel, no PostHog, etc.).</p>
+        <p><strong>Events collected (among others):</strong> app open, routine logged, skipped, paused, resumed, added and archived, onboarding completed, HealthKit connected, protocol viewed in "Discover".</p>
+        <p>With each event we store a <strong>snapshot of your app settings</strong> (e.g. color preset, whether HealthKit is connected, protocol size). These event data are linked to your account and are therefore <strong>not anonymous</strong>. <strong>No HealthKit health values</strong> are sent as analytics events.</p>
+        <p><strong>Purpose:</strong> to understand how the app is used in order to improve features and stability. <strong>Legal basis:</strong> Art. 6(1)(f) GDPR (legitimate interest in product improvement).</p>
+        <p><strong>Objection / opt-out:</strong> Usage analytics is on by default. You can <strong>disable it at any time in the app settings</strong>; no further analytics events are collected after that.</p>
+        <h3>Advertising &amp; cross-app tracking</h3>
         <ul>
-          <li>We use <strong>no own analytics</strong> (no Firebase, no Mixpanel, no PostHog, etc.).</li>
           <li>We use <strong>no advertising</strong>.</li>
-          <li>We use <strong>no IDFA / no cross-app tracking</strong> and therefore do <strong>not show an App Tracking Transparency (ATT) prompt</strong>.</li>
-          <li>The app's Privacy Manifest has <code>NSPrivacyTracking = false</code>.</li>
+          <li>We use <strong>no IDFA / no cross-app tracking</strong> and therefore do <strong>not show an App Tracking Transparency (ATT) prompt</strong>. The usage analytics stays purely <strong>first-party</strong> (only in our Supabase) and is not combined with third parties for advertising.</li>
+          <li>There is <strong>no data transmission to ad networks or data brokers</strong>.</li>
         </ul>
-        <p>There is <strong>no data transmission to ad networks or data brokers</strong>.</p>
 
         <h2>10. App Permissions</h2>
         <p>circady requests the following permissions:</p>
