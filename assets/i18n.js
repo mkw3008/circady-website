@@ -10,6 +10,9 @@
     en: {
       "nav.features": "Solutions",
       "nav.protocols": "Protocols",
+      "nav.protocols20": "20 Protocols",
+      "nav.supercomp": "Supercompensation",
+      "nav.watch": "circady Watch",
       "nav.support": "Support",
 
       "hero.eyebrow": "Longevity Routine Manager",
@@ -132,6 +135,9 @@
     de: {
       "nav.features": "Lösungen",
       "nav.protocols": "Protokolle",
+      "nav.protocols20": "20 Protokolle",
+      "nav.supercomp": "Superkompensation",
+      "nav.watch": "circady Watch",
       "nav.support": "Support",
 
       "hero.eyebrow": "Longevity Routine Manager",
