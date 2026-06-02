@@ -797,6 +797,68 @@ h3 { font-size: clamp(20px, 2.4vw, 26px); line-height: 1.2; }
 .legal-min { font-size: 12px; line-height: 1.55; color: var(--ink-faint); }
 .legal-min a { color: var(--ink-faint); text-decoration: underline; }
 
+/* === Apple-Watch-Rahmen === */
+.watch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+}
+.watch-body {
+  position: relative;
+  z-index: 1;
+  width: clamp(190px, 26vw, 240px);
+  aspect-ratio: 374 / 446;
+  background: #1b1b1d;
+  border-radius: 32% / 26%;
+  padding: 9px;
+  box-shadow: var(--shadow-lift);
+  border: 1px solid rgba(0, 0, 0, 0.25);
+}
+.watch-screen {
+  width: 100%;
+  height: 100%;
+  border-radius: 27% / 21%;
+  overflow: hidden;
+  background: #000;
+}
+.watch-screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* Digital Crown */
+.watch-body::after {
+  content: "";
+  position: absolute;
+  right: -5px;
+  top: 34%;
+  width: 7px;
+  height: 30px;
+  background: #2c2c2e;
+  border-radius: 3px;
+}
+/* Seitentaste */
+.watch-body::before {
+  content: "";
+  position: absolute;
+  right: -3px;
+  top: 56%;
+  width: 4px;
+  height: 26px;
+  background: #2c2c2e;
+  border-radius: 3px;
+}
+/* Armband */
+.watch-band {
+  width: 46%;
+  height: clamp(38px, 6vw, 60px);
+  background: linear-gradient(#3a3a3d, #2a2a2c);
+}
+.watch-band--top { border-radius: 16px 16px 7px 7px; margin-bottom: -10px; }
+.watch-band--bottom { border-radius: 7px 7px 16px 16px; margin-top: -10px; }
+
 /* === Tastatur-Fokus === */
 :focus-visible {
   outline: 3px solid var(--accent);

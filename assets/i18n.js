@@ -82,6 +82,13 @@
       "download.lead": "circady is coming to the App Store. Scan the code or use the badge below to download — soon on iPhone.",
       "download.qrNote": "QR code follows once the app is published",
 
+      "watch.eyebrow": "On your wrist",
+      "watch.title": "circady on Apple Watch",
+      "watch.lead": "Take your routines with you. circady on Apple Watch shows today's plan and lets you log routines right from your wrist — no phone needed.",
+      "watch.p1": "See today's routines and your domain scores at a glance.",
+      "watch.p2": "Log, skip or complete a routine with a single tap.",
+      "watch.p3": "Stays in sync with your iPhone automatically.",
+
       "footer.imprint": "Imprint",
       "footer.privacy": "Privacy Policy",
       "footer.support": "Support",
@@ -196,6 +203,13 @@
       "download.title": "Starte deine Longevity-Routine",
       "download.lead": "circady kommt in den App Store. Scanne den Code oder nutze das Badge unten zum Download — bald für iPhone.",
       "download.qrNote": "QR-Code folgt nach Veröffentlichung der App",
+
+      "watch.eyebrow": "Direkt am Handgelenk",
+      "watch.title": "circady auf der Apple Watch",
+      "watch.lead": "Nimm deine Routinen mit. Mit circady auf der Apple Watch siehst du deinen Tagesplan und hakst Routinen direkt am Handgelenk ab — ganz ohne iPhone.",
+      "watch.p1": "Sieh die heutigen Routinen und deine Bereichs-Scores auf einen Blick.",
+      "watch.p2": "Routine mit einem Tipp protokollieren, überspringen oder abschließen.",
+      "watch.p3": "Synchronisiert sich automatisch mit deinem iPhone.",
 
       "footer.imprint": "Impressum",
       "footer.privacy": "Datenschutz",
