@@ -337,11 +337,11 @@ h3 { font-size: clamp(20px, 2.4vw, 26px); line-height: 1.2; }
   background: var(--accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E") center / 13px no-repeat;
 }
 .spotlight-visual {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-card);
-  box-shadow: var(--shadow-card);
-  padding: 26px;
+  display: flex;
+  justify-content: center;
+}
+.spotlight-visual .phone {
+  width: clamp(280px, 40vw, 400px);
 }
 .matrix-mini { display: grid; gap: 10px; }
 .matrix-mini .mm-row {
