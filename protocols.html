@@ -1801,7 +1801,14 @@ footer.site-footer {
 </footer>
 
 <script>
-const DATA_URL = 'https://raw.githubusercontent.com/mkw3008/circady-metadata/refs/heads/main/frameworks_metadata.json';
+// Primärquelle: Kopie im Website-Repo. Gleiche Origin, über das Pages-CDN
+// ausgeliefert und damit ohne Rate-Limit (raw.githubusercontent.com
+// antwortet bei mehreren Aufrufen pro IP mit HTTP 429).
+const DATA_URL = 'assets/frameworks_metadata.json';
+// Sekundärquelle: Metadaten-Repo. Wird nach dem Rendern still nachgeladen,
+// damit Änderungen dort ohne Website-Deploy sichtbar werden. Schlägt der
+// Aufruf fehl (429, offline), bleibt die lokale Kopie stehen.
+const DATA_URL_REMOTE = 'https://raw.githubusercontent.com/mkw3008/circady-metadata/refs/heads/main/frameworks_metadata.json';
 
 const PILLAR_ORDER = ['movement', 'mental', 'sleep', 'social', 'nutrition', 'molecules'];
 const PILLAR_LABELS = {
@@ -2397,21 +2404,36 @@ function onLayoutChange() {
 if (mobileMQ.addEventListener) mobileMQ.addEventListener('change', onLayoutChange);
 else mobileMQ.addListener(onLayoutChange);
 
-// Load
-fetch(DATA_URL)
-  .then(r => {
+function loadJson(url) {
+  return fetch(url).then(r => {
     if (!r.ok) throw new Error('HTTP ' + r.status);
     return r.json();
+  });
+}
+
+// Lokale Kopie rendern, danach still gegen das Metadaten-Repo abgleichen.
+loadJson(DATA_URL)
+  .then(data => {
+    renderApp(data);
+    loadJson(DATA_URL_REMOTE)
+      .then(fresh => {
+        if (fresh && fresh.data_version !== data.data_version) renderApp(fresh);
+      })
+      .catch(() => { /* 429 oder offline: lokale Kopie bleibt stehen */ });
   })
-  .then(renderApp)
   .catch(err => {
-    document.getElementById('app').innerHTML = `
-      <div class="error">
-        ${t('errorPrefix')} ${escapeHtml(err.message)}<br><br>
-        URL: ${DATA_URL}<br>
-        ${t('errorHint')}
-      </div>
-    `;
+    // Lokale Kopie fehlt: als letzte Rettung direkt das Repo versuchen.
+    loadJson(DATA_URL_REMOTE)
+      .then(renderApp)
+      .catch(err2 => {
+        document.getElementById('app').innerHTML = `
+          <div class="error">
+            ${t('errorPrefix')} ${escapeHtml(err.message)} / ${escapeHtml(err2.message)}<br><br>
+            URL: ${DATA_URL}<br>
+            ${t('errorHint')}
+          </div>
+        `;
+      });
   });
 </script>
 
