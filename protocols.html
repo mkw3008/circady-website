@@ -1977,9 +1977,16 @@ function renderApp(data) {
       }
     }
     pillarCounts[pillar] = counts;
-    pillarActs[pillar] = [...seen.values()].sort((a, b) =>
-      actName(a).localeCompare(actName(b), currentLang)
-    );
+    // Reihenfolge der Filter-Chips: Häufigkeit absteigend, dann alphabetisch,
+    // Einträge mit führender Ziffer zuletzt.
+    pillarActs[pillar] = [...seen.values()].sort((a, b) => {
+      const byCount = (counts.get(b.id) || 0) - (counts.get(a.id) || 0);
+      if (byCount !== 0) return byCount;
+      const nameA = actName(a), nameB = actName(b);
+      const numA = /^\d/.test(nameA) ? 1 : 0, numB = /^\d/.test(nameB) ? 1 : 0;
+      if (numA !== numB) return numA - numB;
+      return nameA.localeCompare(nameB, currentLang, { numeric: true });
+    });
     // Filter auf Klassifikationen beschränken, die es noch gibt
     for (const id of [...rowFilters[pillar]]) {
       if (!seen.has(id)) rowFilters[pillar].delete(id);
