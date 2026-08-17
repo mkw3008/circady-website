@@ -126,7 +126,7 @@ h3 { font-size: clamp(20px, 2.4vw, 26px); line-height: 1.2; }
 }
 .appstore-badge:hover { opacity: 0.85; }
 .appstore-badge:active { transform: scale(0.97); }
-.appstore-badge svg { width: 26px; height: 26px; flex: none; }
+.appstore-badge svg { width: 26px; height: 26px; flex: none; fill: currentColor; }
 .appstore-badge .ab-text { display: flex; flex-direction: column; line-height: 1.15; }
 .appstore-badge .ab-small { font-size: 11px; font-weight: 400; opacity: 0.9; }
 .appstore-badge .ab-big   { font-size: 19px; font-weight: 500; letter-spacing: -0.01em; }
