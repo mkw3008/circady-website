@@ -18,6 +18,9 @@
   --rule-soft: #e8e4d8;
   --accent: #2f6a45;
   --highlight: #f3e8b3;
+  /* Breite der linken Säulen-Spalte — einzige Quelle der Wahrheit.
+     Wird von .matrix-corner, .pillar-cell und grid-template-columns gelesen. */
+  --pillar-col: 210px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -187,7 +190,8 @@ header {
   left: 0;
   top: 0;
   z-index: 4;
-  min-width: 160px;
+  min-width: var(--pillar-col);
+  max-width: var(--pillar-col);
 }
 
 .fw-header {
@@ -306,13 +310,17 @@ header {
 /* Pillar (left column) */
 .pillar-cell {
   background: var(--bg-deep);
-  padding: 20px 20px;
+  padding: 20px 18px;
   border-right: 1px solid var(--rule);
   border-bottom: 1px solid var(--rule);
   position: sticky;
   left: 0;
   z-index: 1;
-  min-width: 160px;
+  min-width: var(--pillar-col);
+  max-width: var(--pillar-col);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
   font-size: 22px;
   font-weight: 500;
@@ -468,6 +476,182 @@ header {
   margin-top: 4px;
 }
 
+/* === Klassifikations-Filter (pro Zeile) === */
+.pillar-filters {
+  width: 100%;
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.filters-label {
+  width: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 8.5px;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 2px;
+}
+
+.filter-chip {
+  max-width: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+  padding: 3px 8px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--ink-soft);
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.filter-chip:hover { border-color: var(--ink); color: var(--ink); }
+.chip-count {
+  opacity: 0.55;
+  font-variant-numeric: tabular-nums;
+}
+.filter-chip.active .chip-count { opacity: 0.75; }
+.filter-chip.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.filter-chip.filter-reset {
+  border-style: dashed;
+  color: var(--accent);
+  border-color: var(--accent);
+  background: transparent;
+}
+.filter-chip.filter-reset:hover { background: rgba(47, 106, 69, 0.08); }
+.filter-chip[hidden] { display: none; }
+
+.cell-empty[hidden] { display: none; }
+
+/* === Mobile-Ansicht (per JS gerendert, ersetzt die Matrix) === */
+.mobile-wrap {
+  padding: 8px 0 72px;
+}
+
+.m-row {
+  border-top: 1px solid var(--rule-soft);
+}
+.m-row:last-child { border-bottom: 1px solid var(--rule-soft); }
+
+.m-row-head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 20px;
+  background: transparent;
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+}
+.m-row.open .m-row-head { background: var(--bg-deep); }
+
+.m-row-titles { flex: 1; min-width: 0; }
+
+.m-row-de {
+  display: block;
+  font-size: 21px;
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+.m-row-en {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-top: 3px;
+}
+
+.m-row-count {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+
+.m-chev {
+  font-size: 18px;
+  line-height: 1;
+  color: var(--ink-faint);
+  transition: transform 0.18s ease;
+}
+.m-row.open .m-chev { transform: rotate(90deg); }
+
+.m-row-body {
+  display: none;
+  padding: 0 20px 24px;
+}
+.m-row.open .m-row-body { display: block; }
+
+.m-row-body .pillar-filters {
+  margin: 0 0 18px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--rule-soft);
+}
+.m-row-body .filter-chip { font-size: 11.5px; padding: 5px 11px; }
+.m-row-body .filters-label { font-size: 9px; margin-bottom: 4px; }
+
+.m-fw {
+  margin-top: 18px;
+}
+.m-fw[hidden] { display: none; }
+
+.m-fw-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.m-fw-bar {
+  width: 3px;
+  align-self: stretch;
+  border-radius: 2px;
+  flex: none;
+}
+.m-fw-name {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.m-fw-sub {
+  font-size: 10px;
+  color: var(--ink-faint);
+  line-height: 1.3;
+  flex: 1;
+  min-width: 0;
+}
+
+.m-fw .pill { margin-top: 6px; }
+
+.m-empty {
+  padding: 18px 0;
+  font-size: 12px;
+  color: var(--ink-faint);
+}
+.m-empty[hidden] { display: none; }
+
 /* === Reference category gets special treatment - hide from matrix === */
 .cell.reference-cell {
   display: none;
@@ -494,12 +678,17 @@ footer a {
 }
 footer a:hover { text-decoration: underline; }
 
-@media (max-width: 768px) {
+/* Breakpoint identisch zu assets/styles.css (.nav-links) und zur
+   matchMedia-Abfrage im Skript unten — nur an einer Stelle ändern. */
+@media (max-width: 860px) {
   header { padding: 24px 20px 16px; }
   .matrix { margin: 0 20px; }
   .brand h1 { font-size: 32px; }
-  .meta-line { gap: 16px; font-size: 11px; }
+  .meta-line { gap: 14px; font-size: 11px; }
   footer { padding: 16px 20px 32px; }
+  /* Statischer Fallback-Snapshot: bis das Skript die Mobile-Ansicht
+     rendert, soll die 20-Spalten-Matrix das Layout nicht sprengen. */
+  .matrix-wrap { -webkit-overflow-scrolling: touch; }
 }
 </style>
 <style>
@@ -554,7 +743,7 @@ footer.site-footer {
   </div>
 </section>
 
-<main id="app"><div class="matrix-wrap"><div class="matrix" style="grid-template-columns: 160px repeat(20, minmax(240px, 260px));"><div class="matrix-corner">Pillar / Protocol</div><div class="fw-header" data-fw-id="bryan_johnson" style="border-top-color: rgb(83, 74, 183);">
+<main id="app"><div class="matrix-wrap"><div class="matrix" style="grid-template-columns: var(--pillar-col) repeat(20, minmax(240px, 260px));"><div class="matrix-corner">Pillar / Protocol</div><div class="fw-header" data-fw-id="bryan_johnson" style="border-top-color: rgb(83, 74, 183);">
       <button class="collapse-toggle" type="button" aria-label="Spalte einklappen">−</button>
       <div class="fw-name" style="color: #3C3489;">Bryan J.</div>
       <div class="fw-subtitle">Selbstexperimentelles Longevity-Protokoll</div>
@@ -1650,7 +1839,14 @@ const I18N = {
     timingFreqUnit: '× / Woche',
     timingEvidence: 'Evidenz',
     ariaCollapse: 'Spalte einklappen',
-    ariaExpand: 'Spalte ausklappen'
+    ariaExpand: 'Spalte ausklappen',
+    filterLabel: 'Filter',
+    filterReset: 'Alle zeigen',
+    filterNoMatch: 'Keine Routine passt zum Filter.',
+    ariaFilterRow: 'Zeile filtern nach',
+    countRoutines: 'Routinen',
+    ariaRowOpen: 'Bereich öffnen',
+    ariaRowClose: 'Bereich schließen'
   },
   en: {
     loading: 'LOADING PROTOCOLS…',
@@ -1677,7 +1873,14 @@ const I18N = {
     timingFreqUnit: '× / week',
     timingEvidence: 'Evidence',
     ariaCollapse: 'Collapse column',
-    ariaExpand: 'Expand column'
+    ariaExpand: 'Expand column',
+    filterLabel: 'Filter',
+    filterReset: 'Show all',
+    filterNoMatch: 'No routine matches this filter.',
+    ariaFilterRow: 'Filter row by',
+    countRoutines: 'routines',
+    ariaRowOpen: 'Open section',
+    ariaRowClose: 'Close section'
   }
 };
 
@@ -1687,6 +1890,19 @@ let currentLang = (function () {
 })();
 let cachedData = null;
 const t = (key) => I18N[currentLang][key];
+
+// Breakpoint identisch zum @media-Block oben und zu assets/styles.css
+const MOBILE_QUERY = '(max-width: 860px)';
+const mobileMQ = window.matchMedia(MOBILE_QUERY);
+let isMobile = mobileMQ.matches;
+
+// Aktive Klassifikations-Filter je Säulen-Zeile. Modul-Scope, damit sie
+// einen Sprachwechsel und einen Layout-Wechsel überleben.
+const rowFilters = {};
+PILLAR_ORDER.forEach(p => { rowFilters[p] = new Set(); });
+
+// Häufigkeit je Klassifikation und Zeile (wie viele Protokolle empfehlen sie)
+const pillarCounts = {};
 
 // Parse Tu/Ziel/Methode / Do/Goal/Method out of markdown description (lang-neutral)
 function parseStructuredDesc(md) {
@@ -1749,16 +1965,51 @@ function renderApp(data) {
     }
   }
 
+  // Pro Zeile: eindeutige Routinen (= Klassifikationen) für die Filter-Chips
+  const pillarActs = {};
+  for (const pillar of PILLAR_ORDER) {
+    const seen = new Map();
+    const counts = new Map();
+    for (const fw of frameworks) {
+      for (const act of matrix[fw.id][pillar]) {
+        if (!seen.has(act.id)) seen.set(act.id, act);
+        counts.set(act.id, (counts.get(act.id) || 0) + 1);
+      }
+    }
+    pillarCounts[pillar] = counts;
+    pillarActs[pillar] = [...seen.values()].sort((a, b) =>
+      actName(a).localeCompare(actName(b), currentLang)
+    );
+    // Filter auf Klassifikationen beschränken, die es noch gibt
+    for (const id of [...rowFilters[pillar]]) {
+      if (!seen.has(id)) rowFilters[pillar].delete(id);
+    }
+  }
+
   // Render
   const app = document.getElementById('app');
   app.innerHTML = '';
+  app.appendChild(
+    isMobile
+      ? buildMobile(frameworks, matrix, pillarActs)
+      : buildMatrix(frameworks, matrix, pillarActs)
+  );
 
+  PILLAR_ORDER.forEach(applyFilter);
+}
+
+function actName(act) {
+  return act[`name_${currentLang}`] || act.name_de;
+}
+
+/* === Desktop: Matrix === */
+function buildMatrix(frameworks, matrix, pillarActs) {
   const wrap = document.createElement('div');
   wrap.className = 'matrix-wrap';
 
   const grid = document.createElement('div');
   grid.className = 'matrix';
-  grid.style.gridTemplateColumns = `160px repeat(${frameworks.length}, minmax(240px, 260px))`;
+  grid.style.gridTemplateColumns = `var(--pillar-col) repeat(${frameworks.length}, minmax(240px, 260px))`;
 
   // header row
   const corner = document.createElement('div');
@@ -1798,12 +2049,14 @@ function renderApp(data) {
       <span class="pillar-de">${PILLAR_LABELS[pillar][currentLang]}</span>
       <span class="pillar-en">${PILLAR_LABELS[pillar][otherLang]}</span>
     `;
+    pCell.appendChild(buildFilterChips(pillar, pillarActs[pillar]));
     grid.appendChild(pCell);
 
     for (const fw of frameworks) {
       const cell = document.createElement('div');
       cell.className = 'cell';
       cell.dataset.fwId = fw.id;
+      cell.dataset.pillar = pillar;
       const activities = matrix[fw.id][pillar];
       if (activities.length === 0) {
         const empty = document.createElement('div');
@@ -1814,18 +2067,178 @@ function renderApp(data) {
         for (const act of activities) {
           cell.appendChild(makePill(act, fw));
         }
+        // Platzhalter, falls der Zeilenfilter alle Pills dieser Zelle ausblendet
+        const filtered = document.createElement('div');
+        filtered.className = 'cell-empty filter-empty';
+        filtered.textContent = '—';
+        filtered.hidden = true;
+        cell.appendChild(filtered);
       }
       grid.appendChild(cell);
     }
   }
 
   wrap.appendChild(grid);
-  app.appendChild(wrap);
+  return wrap;
+}
+
+/* === Mobil: Säulen-Akkordeon statt 21-Spalten-Grid === */
+function buildMobile(frameworks, matrix, pillarActs) {
+  const wrap = document.createElement('div');
+  wrap.className = 'mobile-wrap';
+  const otherLang = currentLang === 'de' ? 'en' : 'de';
+
+  PILLAR_ORDER.forEach((pillar, idx) => {
+    const groups = frameworks.filter(fw => matrix[fw.id][pillar].length > 0);
+
+    const sec = document.createElement('section');
+    sec.className = 'm-row' + (idx === 0 ? ' open' : '');
+    sec.dataset.pillar = pillar;
+
+    const head = document.createElement('button');
+    head.type = 'button';
+    head.className = 'm-row-head';
+    head.setAttribute('aria-expanded', idx === 0 ? 'true' : 'false');
+    head.innerHTML = `
+      <span class="m-row-titles">
+        <span class="m-row-de">${PILLAR_LABELS[pillar][currentLang]}</span>
+        <span class="m-row-en">${PILLAR_LABELS[pillar][otherLang]}</span>
+      </span>
+      <span class="m-row-count">${pillarActs[pillar].length} ${t('countRoutines')}</span>
+      <span class="m-chev" aria-hidden="true">›</span>
+    `;
+
+    const body = document.createElement('div');
+    body.className = 'm-row-body';
+    body.appendChild(buildFilterChips(pillar, pillarActs[pillar]));
+
+    head.addEventListener('click', () => {
+      const open = sec.classList.toggle('open');
+      head.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+
+    for (const fw of groups) {
+      const g = document.createElement('div');
+      g.className = 'm-fw';
+      g.dataset.fwId = fw.id;
+      g.dataset.pillar = pillar;
+
+      const gHead = document.createElement('div');
+      gHead.className = 'm-fw-head';
+      gHead.style.color = '#' + fw.palette.text;
+      gHead.innerHTML = `
+        <span class="m-fw-bar" style="background: #${fw.palette.border};"></span>
+        <span class="m-fw-name">${escapeHtml(fw[`name_short_${currentLang}`] || fw.name_short_de)}</span>
+        <span class="m-fw-sub">${escapeHtml(fw[`subtitle_${currentLang}`] || fw.subtitle_de || '')}</span>
+      `;
+      g.appendChild(gHead);
+
+      for (const act of matrix[fw.id][pillar]) {
+        g.appendChild(makePill(act, fw));
+      }
+      body.appendChild(g);
+    }
+
+    const noMatch = document.createElement('div');
+    noMatch.className = 'm-empty';
+    noMatch.dataset.pillar = pillar;
+    noMatch.textContent = t('filterNoMatch');
+    noMatch.hidden = true;
+    body.appendChild(noMatch);
+
+    sec.appendChild(head);
+    sec.appendChild(body);
+    wrap.appendChild(sec);
+  });
+
+  return wrap;
+}
+
+/* === Klassifikations-Filter (identisch für beide Layouts) === */
+function buildFilterChips(pillar, acts) {
+  const box = document.createElement('div');
+  box.className = 'pillar-filters';
+  box.dataset.pillar = pillar;
+  box.setAttribute('role', 'group');
+  box.setAttribute('aria-label', `${t('ariaFilterRow')} ${PILLAR_LABELS[pillar][currentLang]}`);
+  if (!acts.length) return box;
+
+  const label = document.createElement('span');
+  label.className = 'filters-label';
+  label.textContent = t('filterLabel');
+  box.appendChild(label);
+
+  for (const act of acts) {
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'filter-chip';
+    chip.dataset.pillar = pillar;
+    chip.dataset.actId = act.id;
+    chip.title = act.id;
+    chip.setAttribute('aria-pressed', 'false');
+    const count = (pillarCounts[pillar] && pillarCounts[pillar].get(act.id)) || 0;
+    chip.innerHTML = `${escapeHtml(actName(act))} <span class="chip-count">(${count})</span>`;
+    chip.addEventListener('click', () => {
+      const set = rowFilters[pillar];
+      if (set.has(act.id)) set.delete(act.id); else set.add(act.id);
+      applyFilter(pillar);
+    });
+    box.appendChild(chip);
+  }
+
+  const reset = document.createElement('button');
+  reset.type = 'button';
+  reset.className = 'filter-chip filter-reset';
+  reset.dataset.pillar = pillar;
+  reset.textContent = t('filterReset');
+  reset.hidden = true;
+  reset.addEventListener('click', () => {
+    rowFilters[pillar].clear();
+    applyFilter(pillar);
+  });
+  box.appendChild(reset);
+
+  return box;
+}
+
+function applyFilter(pillar) {
+  const active = rowFilters[pillar];
+
+  document.querySelectorAll(`.filter-chip[data-pillar="${pillar}"]`).forEach(chip => {
+    if (chip.classList.contains('filter-reset')) {
+      chip.hidden = active.size === 0;
+      return;
+    }
+    const on = active.has(chip.dataset.actId);
+    chip.classList.toggle('active', on);
+    chip.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+
+  document.querySelectorAll(`[data-pillar="${pillar}"] .pill`).forEach(pill => {
+    pill.hidden = active.size > 0 && !active.has(pill.dataset.actId);
+  });
+
+  // Desktop: Zellen, die durch den Filter leer werden, bekommen einen Strich
+  document.querySelectorAll(`.cell[data-pillar="${pillar}"]`).forEach(cell => {
+    const placeholder = cell.querySelector('.filter-empty');
+    if (placeholder) placeholder.hidden = cell.querySelector('.pill:not([hidden])') !== null;
+  });
+
+  // Mobil: komplett leere Protokoll-Gruppen ausblenden
+  let anyVisible = false;
+  document.querySelectorAll(`.m-fw[data-pillar="${pillar}"]`).forEach(group => {
+    const has = group.querySelector('.pill:not([hidden])') !== null;
+    group.hidden = !has;
+    if (has) anyVisible = true;
+  });
+  const noMatch = document.querySelector(`.m-empty[data-pillar="${pillar}"]`);
+  if (noMatch) noMatch.hidden = anyVisible;
 }
 
 function makePill(act, fw) {
   const pill = document.createElement('div');
   pill.className = 'pill';
+  pill.dataset.actId = act.id;
   pill.style.background = '#' + fw.palette.fill;
   pill.style.borderColor = '#' + fw.palette.border + '55';
   pill.style.color = '#' + fw.palette.text;
@@ -1936,7 +2349,7 @@ function updateGridLayout() {
   const cols = Array.from(headers).map(h =>
     h.classList.contains('collapsed') ? '44px' : 'minmax(240px, 260px)'
   ).join(' ');
-  grid.style.gridTemplateColumns = `160px ${cols}`;
+  grid.style.gridTemplateColumns = `var(--pillar-col) ${cols}`;
 }
 
 function escapeHtml(s) {
@@ -1967,6 +2380,15 @@ function setLanguage(lang) {
 document.querySelectorAll('.lang-btn').forEach(btn => {
   btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
 });
+
+// Layout-Wechsel Desktop <-> Mobil neu rendern (Filter bleiben erhalten)
+function onLayoutChange() {
+  if (mobileMQ.matches === isMobile) return;
+  isMobile = mobileMQ.matches;
+  if (cachedData) renderApp(cachedData);
+}
+if (mobileMQ.addEventListener) mobileMQ.addEventListener('change', onLayoutChange);
+else mobileMQ.addListener(onLayoutChange);
 
 // Load
 fetch(DATA_URL)
