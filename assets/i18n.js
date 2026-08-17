@@ -82,8 +82,7 @@
 
       "download.eyebrow": "Get circady",
       "download.title": "Start your longevity routine",
-      "download.lead": "circady is coming to the App Store. Scan the code or use the badge below to download — soon on iPhone.",
-      "download.qrNote": "QR code follows once the app is published",
+      "download.lead": "circady is available on the App Store — download it for iPhone and Apple Watch.",
 
       "watch.eyebrow": "On your wrist",
       "watch.title": "circady on Apple Watch",
@@ -207,8 +206,7 @@
 
       "download.eyebrow": "circady holen",
       "download.title": "Starte deine Longevity-Routine",
-      "download.lead": "circady kommt in den App Store. Scanne den Code oder nutze das Badge unten zum Download — bald für iPhone.",
-      "download.qrNote": "QR-Code folgt nach Veröffentlichung der App",
+      "download.lead": "circady ist im App Store verfügbar — lade sie für iPhone und Apple Watch.",
 
       "watch.eyebrow": "Direkt am Handgelenk",
       "watch.title": "circady auf der Apple Watch",
