@@ -27,10 +27,11 @@
       "protocols.eyebrow": "Where science becomes routine",
       "protocols.title": "The Protocol Library",
       "protocols.lead": "Curated protocols, mapped across six life areas and 254 routine recommendations.",
+      "matrix.swapAxes": "Swap axes",
 
       "spotlight.eyebrow": "No more guesswork",
       "spotlight.title": "Know exactly what to do",
-      "spotlight.lead": "You don't need to read every longevity book. circady distils 20 proven protocols into clear routines — and tells you when each one belongs in your week.",
+      "spotlight.lead": "You don't need to read every longevity book. circady distils 20 proven <a href=\"protocols.html\">protocols</a> into clear routines — and tells you when each one belongs in your week.",
       "spotlight.p1": "Evidence-based routines across movement, nutrition, sleep, mind, social life and molecules.",
       "spotlight.p2": "Timed around recovery, so your effort actually turns into progress.",
       "spotlight.p3": "Compare 20 longevity protocols and keep what fits you.",
@@ -151,10 +152,11 @@
       "protocols.eyebrow": "Wo Wissenschaft zur Routine wird",
       "protocols.title": "Die Protokoll-Bibliothek",
       "protocols.lead": "Kuratierte Protokolle, abgebildet über sechs Lebensbereiche und 254 Routine-Empfehlungen.",
+      "matrix.swapAxes": "Achsen tauschen",
 
       "spotlight.eyebrow": "Schluss mit Rätselraten",
       "spotlight.title": "Wissen, was wirklich zu tun ist",
-      "spotlight.lead": "Du musst nicht jedes Longevity-Buch lesen. circady destilliert 20 bewährte Protokolle in klare Routinen — und sagt dir, wann jede in deine Woche gehört.",
+      "spotlight.lead": "Du musst nicht jedes Longevity-Buch lesen. circady destilliert 20 bewährte <a href=\"protocols.html\">Protokolle</a> in klare Routinen — und sagt dir, wann jede in deine Woche gehört.",
       "spotlight.p1": "Evidenzbasierte Routinen für Bewegung, Ernährung, Schlaf, Mental, Soziales und Moleküle.",
       "spotlight.p2": "Nach Erholung getaktet, damit dein Aufwand wirklich zu Fortschritt wird.",
       "spotlight.p3": "Vergleiche 20 Longevity-Protokolle und behalte, was zu dir passt.",
@@ -273,6 +275,12 @@
       var key = nodes[i].getAttribute("data-i18n");
       if (dict[key] != null) nodes[i].textContent = dict[key];
     }
+    // Texte mit Inline-Markup (z. B. Links) — Strings stammen ausschliesslich aus dieser Datei
+    var htmlNodes = document.querySelectorAll("[data-i18n-html]");
+    for (var h = 0; h < htmlNodes.length; h++) {
+      var hk = htmlNodes[h].getAttribute("data-i18n-html");
+      if (dict[hk] != null) htmlNodes[h].innerHTML = dict[hk];
+    }
     // Platzhalter (placeholder) übersetzen
     var phs = document.querySelectorAll("[data-i18n-placeholder]");
     for (var p = 0; p < phs.length; p++) {
@@ -292,6 +300,10 @@
 
   var current = pickLang();
   applyLang(current);
+
+  // Seiten, die Markup per JS nachrendern (protocols*.html), rufen das nach
+  // dem Rendern auf, damit neue [data-i18n]-Knoten übersetzt werden.
+  window.circadyApplyLang = function () { applyLang(current); };
 
   var switches = document.querySelectorAll(".lang-switch button");
   for (var k = 0; k < switches.length; k++) {

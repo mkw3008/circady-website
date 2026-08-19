@@ -1,0 +1,1653 @@
+<!DOCTYPE html>
+<!-- saved from url=(0053)file:///Users/mkant/Downloads/circady_overview_3.html -->
+<html lang="de"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>circady — Recovery-Cycle Matrix</title>
+<link rel="icon" type="image/png" href="assets/favicon-64.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+:root {
+  --bg: #f7f5f0;
+  --bg-deep: #efece5;
+  --ink: #1a1a1a;
+  --ink-soft: #4a4a47;
+  --ink-faint: #8a8a85;
+  --rule: #d8d4c8;
+  --rule-soft: #e8e4d8;
+  --accent: #2f6a45;
+  --highlight: #f3e8b3;
+  /* Breite der linken Säulen-Spalte — einzige Quelle der Wahrheit.
+     Wird von .matrix-corner, .pillar-cell und grid-template-columns gelesen. */
+  --pillar-col: 210px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100vh;
+  background-image:
+    radial-gradient(circle at 100% 0%, rgba(47, 106, 69, 0.06) 0%, transparent 35%),
+    radial-gradient(circle at 0% 100%, rgba(47, 106, 69, 0.04) 0%, transparent 40%);
+}
+
+/* === Header === */
+header {
+  padding: 48px 48px 32px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--bg);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.brand h1 {
+  font-family: 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 200;
+  font-size: 48px;
+  letter-spacing: 0.12em;
+  line-height: 1;
+}
+
+.brand .accent {
+  color: var(--accent);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.brand .subtitle {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.lang-switcher {
+  margin-left: auto;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+.lang-btn {
+  padding: 5px 10px;
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink-faint);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+  border-radius: 2px;
+  transition: all 0.15s ease;
+}
+.lang-btn:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+.lang-btn.active {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+
+.meta-line {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.meta-line span strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+/* === Loading === */
+.loading {
+  padding: 96px 48px;
+  text-align: center;
+}
+
+.loading-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  margin: 0 3px;
+  animation: pulse 1.4s infinite ease-in-out both;
+}
+.loading-dot:nth-child(1) { animation-delay: -0.32s; }
+.loading-dot:nth-child(2) { animation-delay: -0.16s; }
+@keyframes pulse {
+  0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+.error {
+  padding: 96px 48px;
+  text-align: center;
+  color: var(--accent);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 12px;
+}
+
+/* === Matrix container === */
+.matrix-wrap {
+  padding: 32px 0 96px;
+  overflow-x: auto;
+  overflow-y: visible;
+}
+
+.matrix {
+  display: grid;
+  min-width: max-content;
+  margin: 0 48px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+/* Header row */
+.matrix-corner {
+  background: var(--bg-deep);
+  padding: 16px 20px;
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  display: flex;
+  align-items: center;
+  position: sticky;
+  left: 0;
+  top: 0;
+  z-index: 4;
+  min-width: var(--pillar-col);
+  max-width: var(--pillar-col);
+}
+
+.fw-header {
+  background: var(--bg-deep);
+  padding: 16px 18px;
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  min-width: 240px;
+  max-width: 260px;
+  vertical-align: top;
+}
+
+/* === Collapse toggle button === */
+.collapse-toggle {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--rule);
+  background: var(--bg);
+  border-radius: 3px;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--ink-faint);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  z-index: 3;
+  transition: all 0.15s ease;
+}
+.collapse-toggle:hover {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+
+/* === Collapsed framework header === */
+.fw-header.collapsed {
+  min-width: 44px;
+  max-width: 44px;
+  padding: 36px 4px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+.fw-header.collapsed .fw-subtitle {
+  display: none;
+}
+.fw-header.collapsed .fw-name {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: 14px;
+  line-height: 1;
+  white-space: nowrap;
+  margin: 0;
+  max-height: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fw-header.collapsed .collapse-toggle {
+  top: 8px;
+  right: 50%;
+  transform: translateX(50%);
+}
+
+/* === Collapsed cell === */
+.cell.collapsed {
+  min-width: 44px;
+  max-width: 44px;
+  padding: 0;
+}
+.cell.collapsed > * {
+  display: none;
+}
+
+.fw-header:last-child { border-right: none; }
+
+.fw-name {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+}
+
+.fw-kind {
+  display: inline-block;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 2px;
+  margin-bottom: 6px;
+}
+
+.fw-kind[data-kind="protocol"] { background: rgba(47, 106, 69, 0.08); color: var(--accent); }
+.fw-kind[data-kind="exemplary"] { background: rgba(20, 80, 40, 0.08); color: #2a5a3a; }
+
+.fw-subtitle {
+  font-size: 11px;
+  color: var(--ink-faint);
+  line-height: 1.35;
+}
+
+/* Pillar (left column) */
+.pillar-cell {
+  background: var(--bg-deep);
+  padding: 20px 18px;
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  min-width: var(--pillar-col);
+  max-width: var(--pillar-col);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: -0.01em;
+}
+
+.pillar-cell .pillar-de {
+  display: block;
+}
+
+.pillar-cell .pillar-en {
+  display: block;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-top: 4px;
+}
+
+/* Cell (data) */
+.cell {
+  padding: 12px;
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cell:last-child { border-right: none; }
+
+.cell-empty {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 10px;
+  color: var(--ink-faint);
+  opacity: 0.4;
+  text-align: center;
+  padding-top: 16px;
+}
+
+/* === Pills === */
+.pill {
+  border-radius: 6px;
+  padding: 8px 11px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 1px solid;
+  user-select: none;
+}
+
+.pill:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.pill-name {
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 1.25;
+}
+
+.pill-id {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  opacity: 0.65;
+  margin-top: 2px;
+}
+
+.pill-cycle-tag {
+  display: inline-block;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 1px 5px;
+  border-radius: 2px;
+  margin-top: 6px;
+  background: rgba(0,0,0,0.06);
+  opacity: 0.75;
+}
+
+/* Expanded pill */
+.pill.expanded {
+  cursor: default;
+  padding: 14px 16px;
+}
+
+.pill-details {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0,0,0,0.12);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.pill-section {
+  margin-top: 8px;
+}
+
+.pill-section:first-child { margin-top: 0; }
+
+.pill-section h4 {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-bottom: 3px;
+}
+
+.pill-section p {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.pill-section strong {
+  font-weight: 600;
+}
+
+.timing-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 12px;
+  font-size: 11px;
+  margin-top: 6px;
+}
+
+.timing-grid dt {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 10px;
+  opacity: 0.65;
+  white-space: nowrap;
+}
+
+.timing-grid dd {
+  font-weight: 500;
+}
+
+.healthkit-tag {
+  display: inline-block;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 9px;
+  padding: 2px 6px;
+  background: rgba(0,0,0,0.1);
+  border-radius: 2px;
+  margin-top: 4px;
+}
+
+/* === Klassifikations-Filter (pro Zeile) === */
+.pillar-filters {
+  width: 100%;
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.filters-label {
+  width: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 8.5px;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 2px;
+}
+
+.filter-chip {
+  max-width: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+  padding: 3px 8px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--ink-soft);
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.filter-chip:hover { border-color: var(--ink); color: var(--ink); }
+.chip-count {
+  opacity: 0.55;
+  font-variant-numeric: tabular-nums;
+}
+.filter-chip.active .chip-count { opacity: 0.75; }
+.filter-chip.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.filter-chip.filter-reset {
+  border-style: dashed;
+  color: var(--accent);
+  border-color: var(--accent);
+  background: transparent;
+}
+.filter-chip.filter-reset:hover { background: rgba(47, 106, 69, 0.08); }
+.filter-chip[hidden] { display: none; }
+
+.cell-empty[hidden] { display: none; }
+
+/* === Mobile-Ansicht (per JS gerendert, ersetzt die Matrix) === */
+.mobile-wrap {
+  padding: 8px 0 72px;
+}
+
+.m-row {
+  border-top: 1px solid var(--rule-soft);
+}
+.m-row:last-child { border-bottom: 1px solid var(--rule-soft); }
+
+.m-row-head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 20px;
+  background: transparent;
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+}
+.m-row.open .m-row-head { background: var(--bg-deep); }
+
+.m-row-titles { flex: 1; min-width: 0; }
+
+.m-row-de {
+  display: block;
+  font-size: 21px;
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+.m-row-en {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-top: 3px;
+}
+
+.m-row-count {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+
+.m-chev {
+  font-size: 18px;
+  line-height: 1;
+  color: var(--ink-faint);
+  transition: transform 0.18s ease;
+}
+.m-row.open .m-chev { transform: rotate(90deg); }
+
+.m-row-body {
+  display: none;
+  padding: 0 20px 24px;
+}
+.m-row.open .m-row-body { display: block; }
+
+.m-row-body .pillar-filters {
+  margin: 0 0 18px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--rule-soft);
+}
+.m-row-body .filter-chip { font-size: 11.5px; padding: 5px 11px; }
+.m-row-body .filters-label { font-size: 9px; margin-bottom: 4px; }
+
+.m-fw {
+  margin-top: 18px;
+}
+.m-fw[hidden] { display: none; }
+
+.m-fw-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.m-fw-bar {
+  width: 3px;
+  align-self: stretch;
+  border-radius: 2px;
+  flex: none;
+}
+.m-fw-name {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.m-fw-sub {
+  font-size: 10px;
+  color: var(--ink-faint);
+  line-height: 1.3;
+  flex: 1;
+  min-width: 0;
+}
+
+.m-fw .pill { margin-top: 6px; }
+
+.m-empty {
+  padding: 18px 0;
+  font-size: 12px;
+  color: var(--ink-faint);
+}
+.m-empty[hidden] { display: none; }
+
+/* === Reference category gets special treatment - hide from matrix === */
+.cell.reference-cell {
+  display: none;
+}
+
+/* === Footer === */
+footer {
+  padding: 24px 48px 48px;
+  border-top: 1px solid var(--rule);
+  background: var(--bg);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+footer a:hover { text-decoration: underline; }
+
+/* Breakpoint identisch zu assets/styles.css (.nav-links) und zur
+   matchMedia-Abfrage im Skript unten — nur an einer Stelle ändern. */
+@media (max-width: 860px) {
+  header { padding: 24px 20px 16px; }
+  .matrix { margin: 0 20px; }
+  .brand h1 { font-size: 32px; }
+  .meta-line { gap: 14px; font-size: 11px; }
+  footer { padding: 16px 20px 32px; }
+  /* Statischer Fallback-Snapshot: bis das Skript die Mobile-Ansicht
+     rendert, soll die 20-Spalten-Matrix das Layout nicht sprengen. */
+  .matrix-wrap { -webkit-overflow-scrolling: touch; }
+}
+
+/* Eckzelle: Beschriftung + Link auf die jeweils andere Achsen-Variante */
+.matrix-corner {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 6px;
+}
+/* Stil analog .lead a in assets/styles.css (global gilt a { color: inherit }) */
+.corner-swap {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  line-height: 1.3;
+}
+.corner-swap:hover { color: var(--ink); }
+</style>
+<style>
+/* === Chrome an die Startseite (index.html) angleichen === */
+header.site-header { padding: 0; }
+.site-header .brand { align-items: center; gap: 10px; }
+footer.site-footer {
+  display: block;
+  padding: 52px 0 40px;
+  font-family: var(--font);
+  font-size: 17px;
+  letter-spacing: normal;
+  color: var(--ink);
+}
+</style>
+<style>
+/* ============================================================
+   protocols2.html — transponierte Matrix
+   Spalten = Säulen (Kategorien), Zeilen = Protokolle.
+   Alle Regeln hier überschreiben bewusst die Blöcke oben; die
+   Ausgangsdatei protocols.html bleibt unangetastet.
+   ============================================================ */
+
+:root {
+  /* Linke Spalte trägt jetzt Protokollname + Untertitel */
+  --pillar-col: 240px;
+}
+
+/* .matrix behält min-width: max-content aus dem Block oben — .matrix hat
+   overflow: hidden, ohne max-content würden die rechten Spalten
+   abgeschnitten statt in .matrix-wrap horizontal scrollbar zu sein. */
+
+.matrix-outer { display: block; }
+
+/* === Spaltenkopf = Säule === */
+.pillar-header {
+  background: var(--bg-deep);
+  padding: 16px 18px;
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.pillar-header:last-child { border-right: none; }
+.pillar-header .pillar-de {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+.pillar-header .pillar-en {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-top: 4px;
+}
+.pillar-header .pillar-count {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 10px;
+  color: var(--ink-faint);
+  margin-top: 6px;
+}
+
+/* === Zeilenkopf = Protokoll === */
+.fw-rowhead {
+  background: var(--bg-deep);
+  padding: 16px 18px;
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  border-left: 4px solid transparent;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  min-width: var(--pillar-col);
+  max-width: var(--pillar-col);
+}
+.fw-rowhead .fw-name { font-size: 17px; }
+.fw-rowhead .fw-subtitle { padding-right: 22px; }
+.fw-rowhead.collapsed {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  cursor: pointer;
+}
+.fw-rowhead.collapsed .fw-subtitle { display: none; }
+.fw-rowhead.collapsed .fw-name { font-size: 14px; margin-bottom: 0; }
+
+/* Eingeklappte Zeile: Zellen auf Höhe 0, Breite bleibt (Spalten-Raster!) */
+.cell.collapsed {
+  min-width: 0;
+  max-width: none;
+  max-height: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.cell.collapsed > * { display: none; }
+
+/* === Filterleiste (ersetzt die Chips in der linken Spalte) === */
+.filter-bar {
+  margin: 24px 48px 0;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--bg);
+}
+.filter-bar-head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  text-align: left;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.filter-bar-head .filter-bar-active {
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+}
+.filter-bar-head .m-chev {
+  margin-left: auto;
+  font-size: 16px;
+  transition: transform 0.2s ease;
+}
+.filter-bar.open .filter-bar-head .m-chev { transform: rotate(90deg); }
+.filter-bar-body { display: none; padding: 0 16px 12px; }
+.filter-bar.open .filter-bar-body { display: block; }
+.filter-group {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 8px 0;
+  border-top: 1px solid var(--rule-soft);
+}
+.filter-group-title {
+  flex: 0 0 108px;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 14px;
+  font-style: italic;
+  font-weight: 500;
+  padding-top: 1px;
+}
+.filter-group .pillar-filters { margin-top: 0; flex: 1 1 auto; width: auto; }
+
+@media (max-width: 860px) {
+  .filter-bar { margin: 12px 20px 0; }
+  .filter-group { flex-direction: column; gap: 4px; }
+  .filter-group-title { flex: none; }
+  /* Ersetzt .m-row-body .filter-chip aus protocols.html — die Chips liegen
+     jetzt in der Filterleiste, nicht mehr im Akkordeon-Body. */
+  .filter-bar .filter-chip { font-size: 11.5px; padding: 5px 11px; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav" aria-label="Main">
+    <a class="brand" href="index.html" aria-label="circady — home">
+      <img src="assets/app-icon.png" alt="">
+      <span class="brand-name">circady</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html#features" data-i18n="nav.protocols20">20 Protocols</a></li>
+      <li><a href="index.html#muscle" data-i18n="nav.supercomp">Supercompensation</a></li>
+      <li><a href="index.html#watch" data-i18n="nav.watch">circady Watch</a></li>
+      <li><a href="support.html" data-i18n="nav.support">Support</a></li>
+    </ul>
+    <div class="nav-right">
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button class="lang-btn" type="button" data-lang="de">DE</button>
+        <button class="lang-btn" type="button" data-lang="en">EN</button>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<section class="page-hero">
+  <div class="container">
+    <span class="eyebrow" data-i18n="protocols.eyebrow">Where science becomes routine</span>
+    <h1 data-i18n="protocols.title" style="margin-top:14px">The Protocol Library</h1>
+    <p class="lead" data-i18n="protocols.lead" style="max-width:680px;margin:18px 0 26px">Curated protocols, mapped across six life areas and 254 routine recommendations.</p>
+    <div class="meta-line" id="meta">
+      <span><strong>20</strong> Protocols</span>
+      <span><strong>74</strong> Routines</span>
+      <span><strong>254</strong> Endorsements</span>
+      <span><strong>v6.2.0</strong> · Schema 5.0.0</span>
+      <span>Stand: <strong>2026-05-18</strong></span>
+    </div>
+  </div>
+</section>
+
+<main id="app">
+  <div class="loading">
+    <span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span>
+    <p style="margin-top:16px;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',Arial,sans-serif;font-size:11px;letter-spacing:0.1em;color:var(--ink-faint)">LADE PROTOKOLLE…</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="assets/app-icon.png" alt="">
+        <span class="brand-name">circady</span>
+      </div>
+      <nav class="footer-links" aria-label="Footer">
+        <a href="support.html" data-i18n="footer.support">Support</a>
+        <a href="privacy.html" data-i18n="footer.privacy">Privacy Policy</a>
+        <a href="imprint.html" data-i18n="footer.imprint">Imprint</a>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p data-i18n="footer.disclaimer">circady supports healthy habits and is not a medical device. It does not provide medical advice, diagnosis or treatment.</p>
+      <p class="footer-pillars" id="footer-pillars">circady · Bewegung · Mental · Schlaf · Sozial · Ernährung · Moleküle</p>
+      <p data-i18n="footer.copyright">© 2026 circady. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Primärquelle: Kopie im Website-Repo. Gleiche Origin, über das Pages-CDN
+// ausgeliefert und damit ohne Rate-Limit (raw.githubusercontent.com
+// antwortet bei mehreren Aufrufen pro IP mit HTTP 429).
+const DATA_URL = 'assets/frameworks_metadata.json';
+// Sekundärquelle: Metadaten-Repo. Wird nach dem Rendern still nachgeladen,
+// damit Änderungen dort ohne Website-Deploy sichtbar werden. Schlägt der
+// Aufruf fehl (429, offline), bleibt die lokale Kopie stehen.
+const DATA_URL_REMOTE = 'https://raw.githubusercontent.com/mkw3008/circady-metadata/refs/heads/main/frameworks_metadata.json';
+
+const PILLAR_ORDER = ['movement', 'mental', 'sleep', 'social', 'nutrition', 'molecules'];
+const PILLAR_LABELS = {
+  movement:  { de: 'Bewegung',  en: 'Movement' },
+  mental:    { de: 'Mental',    en: 'Mental' },
+  sleep:     { de: 'Schlaf',    en: 'Sleep' },
+  social:    { de: 'Sozial',    en: 'Social' },
+  nutrition: { de: 'Ernährung', en: 'Nutrition' },
+  molecules: { de: 'Moleküle',  en: 'Molecules' }
+};
+
+const I18N = {
+  de: {
+    loading: 'LADE PROTOKOLLE…',
+    errorPrefix: 'FEHLER beim Laden:',
+    errorHint: 'Lade die neue Datei nach GitHub hoch und lade neu.',
+    pillarFramework: 'Protokoll / Säule',
+    metaFrameworks: 'Protokolle',
+    metaActivities: 'Routinen',
+    metaEndorsements: 'Empfehlungen',
+    metaSchema: 'Schema',
+    metaStand: 'Stand:',
+    footerPillars: 'circady · Bewegung · Mental · Schlaf · Sozial · Ernährung · Moleküle',
+    sectionDescription: 'Beschreibung',
+    sectionTiming: 'Timing',
+    sectionPillarContrib: 'Säulen-Beitrag',
+    sectionHealthKit: 'Apple Health',
+    continuousLabel: 'Kontinuierlich (tägliche Gewohnheit)',
+    pillTagContinuous: 'kontinuierlich',
+    pillTagCyclic: 'Zyklus',
+    timingDuration: 'Dauer',
+    timingRecovery: 'Erholung min',
+    timingSweetSpot: 'Optimum',
+    timingFreq: 'Frequenz',
+    timingFreqUnit: '× / Woche',
+    timingEvidence: 'Evidenz',
+    ariaCollapse: 'Zeile einklappen',
+    ariaExpand: 'Zeile ausklappen',
+    filterLabel: 'Filter',
+    filterReset: 'Alle zeigen',
+    swapAxes: 'Achsen tauschen',
+    filterNoMatch: 'Keine Routine passt zum Filter.',
+    ariaFilterRow: 'Spalte filtern nach',
+    countRoutines: 'Routinen',
+    ariaRowOpen: 'Bereich öffnen',
+    ariaRowClose: 'Bereich schließen'
+  },
+  en: {
+    loading: 'LOADING PROTOCOLS…',
+    errorPrefix: 'LOAD ERROR:',
+    errorHint: 'Upload the new file to GitHub and reload.',
+    pillarFramework: 'Protocol / Pillar',
+    metaFrameworks: 'Protocols',
+    metaActivities: 'Routines',
+    metaEndorsements: 'Endorsements',
+    metaSchema: 'Schema',
+    metaStand: 'Updated:',
+    footerPillars: 'circady · Movement · Mental · Sleep · Social · Nutrition · Molecules',
+    sectionDescription: 'Description',
+    sectionTiming: 'Timing',
+    sectionPillarContrib: 'Pillar contribution',
+    sectionHealthKit: 'Apple Health',
+    continuousLabel: 'Continuous (daily habit)',
+    pillTagContinuous: 'continuous',
+    pillTagCyclic: 'Cyclic',
+    timingDuration: 'Duration',
+    timingRecovery: 'Recovery min',
+    timingSweetSpot: 'Sweet spot',
+    timingFreq: 'Frequency',
+    timingFreqUnit: '× / week',
+    timingEvidence: 'Evidence',
+    ariaCollapse: 'Collapse row',
+    ariaExpand: 'Expand row',
+    filterLabel: 'Filter',
+    filterReset: 'Show all',
+    swapAxes: 'Swap axes',
+    filterNoMatch: 'No routine matches this filter.',
+    ariaFilterRow: 'Filter column by',
+    countRoutines: 'routines',
+    ariaRowOpen: 'Open section',
+    ariaRowClose: 'Close section'
+  }
+};
+
+let currentLang = (function () {
+  try { var s = localStorage.getItem('circady-lang'); if (s === 'de' || s === 'en') return s; } catch (e) {}
+  return (navigator.language || 'en').toLowerCase().indexOf('de') === 0 ? 'de' : 'en';
+})();
+let cachedData = null;
+const t = (key) => I18N[currentLang][key];
+
+// Breakpoint identisch zum @media-Block oben und zu assets/styles.css
+const MOBILE_QUERY = '(max-width: 860px)';
+const mobileMQ = window.matchMedia(MOBILE_QUERY);
+let isMobile = mobileMQ.matches;
+
+// Filterleiste: startet immer zugeklappt; der Zähler im Kopf zeigt an,
+// ob Filter aktiv sind.
+let filtersOpen = false;
+
+// Aktive Klassifikations-Filter je Säule (jetzt eine SPALTE). Modul-Scope,
+// damit sie einen Sprachwechsel und einen Layout-Wechsel überleben.
+const rowFilters = {};
+PILLAR_ORDER.forEach(p => { rowFilters[p] = new Set(); });
+
+// Häufigkeit je Klassifikation und Zeile (wie viele Protokolle empfehlen sie)
+const pillarCounts = {};
+
+// Parse Tu/Ziel/Methode / Do/Goal/Method out of markdown description (lang-neutral)
+function parseStructuredDesc(md) {
+  if (!md) return null;
+  const re = /\*\*([^:*]+):\*\*\s*([\s\S]*?)(?=\n\n\*\*[^:*]+:\*\*|$)/g;
+  const sections = {};
+  let m;
+  while ((m = re.exec(md)) !== null) {
+    sections[m[1].trim()] = m[2].trim();
+  }
+  if (Object.keys(sections).length === 0) return null;
+  return sections;
+}
+
+function fmtTiming(timing) {
+  if (!timing) return 'n/a';
+  if (timing.cycle_kind === 'continuous') {
+    return { mode: 'continuous', label: t('continuousLabel') };
+  }
+  return {
+    mode: 'supercompensation',
+    duration: timing.duration_min ? `${timing.duration_min} min` : null,
+    recovery: timing.recovery_hours_min ? `${timing.recovery_hours_min} h` : null,
+    sweet:    timing.sweet_spot_hours ? `${timing.sweet_spot_hours} h` : null,
+    freq:     timing.frequency_per_week_recommended ? `${timing.frequency_per_week_recommended}${t('timingFreqUnit')}` : null,
+    evidence: timing.evidence || null
+  };
+}
+
+function renderApp(data) {
+  cachedData = data;
+
+  // Update header meta
+  document.getElementById('meta').innerHTML = `
+    <span><strong>${data.frameworks.length}</strong> ${t('metaFrameworks')}</span>
+    <span><strong>${data.activities.filter(a => a.category !== 'reference').length}</strong> ${t('metaActivities')}</span>
+    <span><strong>${data.endorsements.length}</strong> ${t('metaEndorsements')}</span>
+    <span><strong>v${data.data_version}</strong> · ${t('metaSchema')} ${data.schema_version}</span>
+    <span>${t('metaStand')} <strong>${data.data_updated}</strong></span>
+  `;
+
+  // Update footer pillar line
+  document.getElementById('footer-pillars').textContent = t('footerPillars');
+
+  // Sort frameworks by order
+  const frameworks = [...data.frameworks].sort((a, b) => (a.order || 99) - (b.order || 99));
+
+  // Build matrix: framework_id × pillar -> list of activities
+  const matrix = {};
+  for (const fw of frameworks) {
+    matrix[fw.id] = {};
+    for (const p of PILLAR_ORDER) matrix[fw.id][p] = [];
+  }
+
+  for (const e of data.endorsements) {
+    const act = data.activities.find(a => a.id === e.activity_id);
+    if (!act || act.category === 'reference') continue;
+    if (matrix[e.framework_id] && matrix[e.framework_id][act.category]) {
+      matrix[e.framework_id][act.category].push(act);
+    }
+  }
+
+  // Pro Zeile: eindeutige Routinen (= Klassifikationen) für die Filter-Chips
+  const pillarActs = {};
+  for (const pillar of PILLAR_ORDER) {
+    const seen = new Map();
+    const counts = new Map();
+    for (const fw of frameworks) {
+      for (const act of matrix[fw.id][pillar]) {
+        if (!seen.has(act.id)) seen.set(act.id, act);
+        counts.set(act.id, (counts.get(act.id) || 0) + 1);
+      }
+    }
+    pillarCounts[pillar] = counts;
+    // Reihenfolge der Filter-Chips: Häufigkeit absteigend, dann alphabetisch,
+    // Einträge mit führender Ziffer zuletzt.
+    pillarActs[pillar] = [...seen.values()].sort((a, b) => {
+      const byCount = (counts.get(b.id) || 0) - (counts.get(a.id) || 0);
+      if (byCount !== 0) return byCount;
+      const nameA = actName(a), nameB = actName(b);
+      const numA = /^\d/.test(nameA) ? 1 : 0, numB = /^\d/.test(nameB) ? 1 : 0;
+      if (numA !== numB) return numA - numB;
+      return nameA.localeCompare(nameB, currentLang, { numeric: true });
+    });
+    // Filter auf Klassifikationen beschränken, die es noch gibt
+    for (const id of [...rowFilters[pillar]]) {
+      if (!seen.has(id)) rowFilters[pillar].delete(id);
+    }
+  }
+
+  // Render
+  const app = document.getElementById('app');
+  app.innerHTML = '';
+  app.appendChild(
+    isMobile
+      ? buildMobile(frameworks, matrix, pillarActs)
+      : buildMatrix(frameworks, matrix, pillarActs)
+  );
+
+  // Der Eck-Link wird per JS erzeugt; assets/i18n.js muss ihn danach übersetzen.
+  if (window.circadyApplyLang) window.circadyApplyLang();
+
+  PILLAR_ORDER.forEach(applyFilter);
+}
+
+function actName(act) {
+  return act[`name_${currentLang}`] || act.name_de;
+}
+
+/* === Desktop: Matrix (TRANSPONIERT) ===
+   Spalten = Säulen (PILLAR_ORDER), Zeilen = Protokolle (frameworks). */
+function buildMatrix(frameworks, matrix, pillarActs) {
+  const outer = document.createElement('div');
+  outer.className = 'matrix-outer';
+  outer.appendChild(buildFilterBar(pillarActs));
+
+  const wrap = document.createElement('div');
+  wrap.className = 'matrix-wrap';
+
+  const grid = document.createElement('div');
+  grid.className = 'matrix';
+  grid.style.gridTemplateColumns = `var(--pillar-col) repeat(${PILLAR_ORDER.length}, minmax(240px, 260px))`;
+
+  // Kopfzeile: Ecke + sechs Säulen-Spaltenköpfe
+  const corner = document.createElement('div');
+  corner.className = 'matrix-corner';
+  corner.innerHTML = `
+    <span class="corner-label">${escapeHtml(t('pillarFramework'))}</span>
+    <a class="corner-swap" href="protocols.html" data-i18n="matrix.swapAxes">${escapeHtml(t('swapAxes'))}</a>
+  `;
+  grid.appendChild(corner);
+
+  const otherLang = currentLang === 'de' ? 'en' : 'de';
+
+  for (const pillar of PILLAR_ORDER) {
+    const h = document.createElement('div');
+    h.className = 'pillar-header';
+    h.dataset.pillar = pillar;
+    h.innerHTML = `
+      <span class="pillar-de">${PILLAR_LABELS[pillar][currentLang]}</span>
+      <span class="pillar-en">${PILLAR_LABELS[pillar][otherLang]}</span>
+      <span class="pillar-count">${pillarActs[pillar].length} ${t('countRoutines')}</span>
+    `;
+    grid.appendChild(h);
+  }
+
+  // Datenzeilen: Protokoll-Zeilenkopf + eine Zelle je Säule
+  for (const fw of frameworks) {
+    const head = document.createElement('div');
+    head.className = 'fw-rowhead';
+    head.dataset.fwId = fw.id;
+    head.style.borderLeftColor = '#' + fw.palette.border;
+    const fwName = fw[`name_short_${currentLang}`] || fw.name_short_de;
+    const fwSubtitle = fw[`subtitle_${currentLang}`] || fw.subtitle_de || '';
+    head.innerHTML = `
+      <button class="collapse-toggle" type="button" aria-label="${t('ariaCollapse')}">−</button>
+      <div class="fw-name" style="color: #${fw.palette.text};">${escapeHtml(fwName)}</div>
+      <div class="fw-subtitle">${escapeHtml(fwSubtitle)}</div>
+    `;
+    head.querySelector('.collapse-toggle').addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleRow(fw.id);
+    });
+    head.addEventListener('click', () => {
+      if (head.classList.contains('collapsed')) toggleRow(fw.id);
+    });
+    grid.appendChild(head);
+
+    for (const pillar of PILLAR_ORDER) {
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      cell.dataset.fwId = fw.id;
+      cell.dataset.pillar = pillar;
+      const activities = matrix[fw.id][pillar];
+      if (activities.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'cell-empty';
+        empty.textContent = '—';
+        cell.appendChild(empty);
+      } else {
+        for (const act of activities) {
+          cell.appendChild(makePill(act, fw));
+        }
+        // Platzhalter, falls der Spaltenfilter alle Pills dieser Zelle ausblendet
+        const filtered = document.createElement('div');
+        filtered.className = 'cell-empty filter-empty';
+        filtered.textContent = '—';
+        filtered.hidden = true;
+        cell.appendChild(filtered);
+      }
+      grid.appendChild(cell);
+    }
+  }
+
+  wrap.appendChild(grid);
+  outer.appendChild(wrap);
+  return outer;
+}
+
+/* === Mobil: Protokoll-Akkordeon (TRANSPONIERT) ===
+   Ein Abschnitt je Protokoll, darin eine Gruppe je Säule. */
+function buildMobile(frameworks, matrix, pillarActs) {
+  const wrap = document.createElement('div');
+  wrap.className = 'mobile-wrap';
+  const otherLang = currentLang === 'de' ? 'en' : 'de';
+
+  wrap.appendChild(buildFilterBar(pillarActs));
+
+  frameworks.forEach((fw, idx) => {
+    const pillars = PILLAR_ORDER.filter(p => matrix[fw.id][p].length > 0);
+    const total = PILLAR_ORDER.reduce((n, p) => n + matrix[fw.id][p].length, 0);
+
+    const sec = document.createElement('section');
+    sec.className = 'm-row' + (idx === 0 ? ' open' : '');
+    sec.dataset.fwId = fw.id;
+
+    const head = document.createElement('button');
+    head.type = 'button';
+    head.className = 'm-row-head';
+    head.setAttribute('aria-expanded', idx === 0 ? 'true' : 'false');
+    head.innerHTML = `
+      <span class="m-row-titles">
+        <span class="m-row-de" style="color: #${fw.palette.text};">${escapeHtml(fw[`name_short_${currentLang}`] || fw.name_short_de)}</span>
+        <span class="m-row-en">${escapeHtml(fw[`subtitle_${currentLang}`] || fw.subtitle_de || '')}</span>
+      </span>
+      <span class="m-row-count">${total} ${t('countRoutines')}</span>
+      <span class="m-chev" aria-hidden="true">›</span>
+    `;
+
+    const body = document.createElement('div');
+    body.className = 'm-row-body';
+
+    head.addEventListener('click', () => {
+      const open = sec.classList.toggle('open');
+      head.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+
+    for (const pillar of pillars) {
+      // Klasse .m-fw bleibt erhalten, damit applyFilter() die Gruppe findet.
+      const g = document.createElement('div');
+      g.className = 'm-fw';
+      g.dataset.fwId = fw.id;
+      g.dataset.pillar = pillar;
+
+      const gHead = document.createElement('div');
+      gHead.className = 'm-fw-head';
+      gHead.style.color = '#' + fw.palette.text;
+      gHead.innerHTML = `
+        <span class="m-fw-bar" style="background: #${fw.palette.border};"></span>
+        <span class="m-fw-name">${PILLAR_LABELS[pillar][currentLang]}</span>
+        <span class="m-fw-sub">${PILLAR_LABELS[pillar][otherLang]}</span>
+      `;
+      g.appendChild(gHead);
+
+      for (const act of matrix[fw.id][pillar]) {
+        g.appendChild(makePill(act, fw));
+      }
+      body.appendChild(g);
+    }
+
+    // "Kein Treffer" gilt jetzt je Protokoll-Abschnitt, nicht je Säule.
+    const noMatch = document.createElement('div');
+    noMatch.className = 'm-empty';
+    noMatch.dataset.fwId = fw.id;
+    noMatch.textContent = t('filterNoMatch');
+    noMatch.hidden = true;
+    body.appendChild(noMatch);
+
+    sec.appendChild(head);
+    sec.appendChild(body);
+    wrap.appendChild(sec);
+  });
+
+  return wrap;
+}
+
+/* === Filterleiste: sechs Säulen-Gruppen, identisch für beide Layouts ===
+   Die Filter hängen weiterhin an der Säule — die ist jetzt eine Spalte. */
+function buildFilterBar(pillarActs) {
+  const bar = document.createElement('div');
+  bar.className = 'filter-bar' + (filtersOpen ? ' open' : '');
+
+  const head = document.createElement('button');
+  head.type = 'button';
+  head.className = 'filter-bar-head';
+  head.setAttribute('aria-expanded', filtersOpen ? 'true' : 'false');
+  const activeCount = PILLAR_ORDER.reduce((n, p) => n + rowFilters[p].size, 0);
+  head.innerHTML = `
+    <span class="filter-bar-title">${t('filterLabel')}</span>
+    ${activeCount ? `<span class="filter-bar-active">(${activeCount})</span>` : ''}
+    <span class="m-chev" aria-hidden="true">›</span>
+  `;
+  head.addEventListener('click', () => {
+    filtersOpen = bar.classList.toggle('open');
+    head.setAttribute('aria-expanded', filtersOpen ? 'true' : 'false');
+  });
+  bar.appendChild(head);
+
+  const body = document.createElement('div');
+  body.className = 'filter-bar-body';
+  for (const pillar of PILLAR_ORDER) {
+    if (!pillarActs[pillar] || !pillarActs[pillar].length) continue;
+    const group = document.createElement('div');
+    group.className = 'filter-group';
+    const title = document.createElement('span');
+    title.className = 'filter-group-title';
+    title.textContent = PILLAR_LABELS[pillar][currentLang];
+    group.appendChild(title);
+    group.appendChild(buildFilterChips(pillar, pillarActs[pillar]));
+    body.appendChild(group);
+  }
+  bar.appendChild(body);
+
+  return bar;
+}
+
+/* === Klassifikations-Filter (identisch für beide Layouts) === */
+function buildFilterChips(pillar, acts) {
+  const box = document.createElement('div');
+  box.className = 'pillar-filters';
+  box.dataset.pillar = pillar;
+  box.setAttribute('role', 'group');
+  box.setAttribute('aria-label', `${t('ariaFilterRow')} ${PILLAR_LABELS[pillar][currentLang]}`);
+  if (!acts.length) return box;
+
+  for (const act of acts) {
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'filter-chip';
+    chip.dataset.pillar = pillar;
+    chip.dataset.actId = act.id;
+    chip.title = act.id;
+    chip.setAttribute('aria-pressed', 'false');
+    const count = (pillarCounts[pillar] && pillarCounts[pillar].get(act.id)) || 0;
+    chip.innerHTML = `${escapeHtml(actName(act))} <span class="chip-count">(${count})</span>`;
+    chip.addEventListener('click', () => {
+      const set = rowFilters[pillar];
+      if (set.has(act.id)) set.delete(act.id); else set.add(act.id);
+      applyFilter(pillar);
+    });
+    box.appendChild(chip);
+  }
+
+  const reset = document.createElement('button');
+  reset.type = 'button';
+  reset.className = 'filter-chip filter-reset';
+  reset.dataset.pillar = pillar;
+  reset.textContent = t('filterReset');
+  reset.hidden = true;
+  reset.addEventListener('click', () => {
+    rowFilters[pillar].clear();
+    applyFilter(pillar);
+  });
+  box.appendChild(reset);
+
+  return box;
+}
+
+function applyFilter(pillar) {
+  const active = rowFilters[pillar];
+
+  document.querySelectorAll(`.filter-chip[data-pillar="${pillar}"]`).forEach(chip => {
+    if (chip.classList.contains('filter-reset')) {
+      chip.hidden = active.size === 0;
+      return;
+    }
+    const on = active.has(chip.dataset.actId);
+    chip.classList.toggle('active', on);
+    chip.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+
+  document.querySelectorAll(`[data-pillar="${pillar}"] .pill`).forEach(pill => {
+    pill.hidden = active.size > 0 && !active.has(pill.dataset.actId);
+  });
+
+  // Desktop: Zellen, die durch den Filter leer werden, bekommen einen Strich
+  document.querySelectorAll(`.cell[data-pillar="${pillar}"]`).forEach(cell => {
+    const placeholder = cell.querySelector('.filter-empty');
+    if (placeholder) placeholder.hidden = cell.querySelector('.pill:not([hidden])') !== null;
+  });
+
+  // Mobil: leere Säulen-Gruppen innerhalb eines Protokolls ausblenden
+  document.querySelectorAll(`.m-fw[data-pillar="${pillar}"]`).forEach(group => {
+    group.hidden = group.querySelector('.pill:not([hidden])') === null;
+  });
+
+  // Abschnitte sind jetzt Protokolle und enthalten mehrere Säulen: die
+  // "kein Treffer"-Zeile muss über ALLE Säulen des Abschnitts entschieden
+  // werden, nicht nur über die gerade gefilterte.
+  updateMobileEmpty();
+  updateFilterBadge();
+}
+
+function updateMobileEmpty() {
+  document.querySelectorAll('.m-row').forEach(sec => {
+    const empty = sec.querySelector('.m-empty');
+    if (!empty) return;
+    empty.hidden = sec.querySelector('.m-fw:not([hidden])') !== null;
+  });
+}
+
+function updateFilterBadge() {
+  const head = document.querySelector('.filter-bar-head');
+  if (!head) return;
+  const n = PILLAR_ORDER.reduce((sum, p) => sum + rowFilters[p].size, 0);
+  let badge = head.querySelector('.filter-bar-active');
+  if (!n) { if (badge) badge.remove(); return; }
+  if (!badge) {
+    badge = document.createElement('span');
+    badge.className = 'filter-bar-active';
+    head.querySelector('.filter-bar-title').after(badge);
+  }
+  badge.textContent = `(${n})`;
+}
+
+function makePill(act, fw) {
+  const pill = document.createElement('div');
+  pill.className = 'pill';
+  pill.dataset.actId = act.id;
+  pill.style.background = '#' + fw.palette.fill;
+  pill.style.borderColor = '#' + fw.palette.border + '55';
+  pill.style.color = '#' + fw.palette.text;
+
+  const continuous = act.timing && act.timing.cycle_kind === 'continuous';
+  const cycleTag = `<span class="pill-cycle-tag">${continuous ? t('pillTagContinuous') : t('pillTagCyclic')}</span>`;
+  const actName = act[`name_${currentLang}`] || act.name_de;
+
+  pill.innerHTML = `
+    <div class="pill-name">${escapeHtml(actName)}</div>
+    <div class="pill-id">${escapeHtml(act.id)}</div>
+    ${cycleTag}
+  `;
+
+  pill.addEventListener('click', () => togglePill(pill, act, fw));
+  return pill;
+}
+
+function renderMarkdown(md) {
+  if (!md) return '';
+  // 1. HTML escapen
+  let safe = String(md)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+  // 2. Absätze splitten an Leerzeile
+  const paragraphs = safe.split(/\n\n+/);
+  return paragraphs.map(p => {
+    if (!p.trim()) return '';
+    // 3. **bold** rendern
+    let html = p.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    // 4. einzelne Newlines im Absatz → <br>
+    html = html.replace(/\n/g, '<br>');
+    return '<p>' + html + '</p>';
+  }).join('');
+}
+
+function togglePill(pill, act, fw) {
+  if (pill.classList.contains('expanded')) {
+    pill.classList.remove('expanded');
+    pill.querySelector('.pill-details')?.remove();
+    return;
+  }
+  pill.classList.add('expanded');
+
+  const desc = act[`description_${currentLang}`] || act.description_de;
+  const tm = fmtTiming(act.timing);
+
+  let html = '<div class="pill-details">';
+
+  html += `<div class="pill-section">${renderMarkdown(desc)}</div>`;
+
+  // Timing
+  html += `<div class="pill-section"><h4>${t('sectionTiming')}</h4>`;
+  if (tm === 'n/a' || !tm) {
+    html += `<p>—</p>`;
+  } else if (tm.mode === 'continuous') {
+    html += `<p>${tm.label}</p>`;
+  } else {
+    html += `<dl class="timing-grid">`;
+    if (tm.duration) html += `<dt>${t('timingDuration')}</dt><dd>${tm.duration}</dd>`;
+    if (tm.recovery) html += `<dt>${t('timingRecovery')}</dt><dd>${tm.recovery}</dd>`;
+    if (tm.sweet)    html += `<dt>${t('timingSweetSpot')}</dt><dd>${tm.sweet}</dd>`;
+    if (tm.freq)     html += `<dt>${t('timingFreq')}</dt><dd>${tm.freq}</dd>`;
+    if (tm.evidence) html += `<dt>${t('timingEvidence')}</dt><dd>${escapeHtml(tm.evidence)}</dd>`;
+    html += `</dl>`;
+  }
+  html += `</div>`;
+
+  // Pillar contribution
+  if (act.pillar_contributions) {
+    const contribs = Object.entries(act.pillar_contributions).filter(([, v]) => v > 0);
+    if (contribs.length > 0) {
+      html += `<div class="pill-section"><h4>${t('sectionPillarContrib')}</h4><dl class="timing-grid">`;
+      for (const [p, v] of contribs) {
+        html += `<dt>${PILLAR_LABELS[p]?.[currentLang] || p}</dt><dd>${v}</dd>`;
+      }
+      html += `</dl></div>`;
+    }
+  }
+
+  html += '</div>';
+
+  pill.insertAdjacentHTML('beforeend', html);
+}
+
+// Ein Protokoll ist jetzt eine ZEILE: Einklappen reduziert die Zeilenhöhe,
+// das Spalten-Raster bleibt unverändert (kein updateGridLayout mehr nötig).
+function toggleRow(fwId) {
+  const heads = document.querySelectorAll(`.fw-rowhead[data-fw-id="${fwId}"]`);
+  const cells = document.querySelectorAll(`.cell[data-fw-id="${fwId}"]`);
+  if (heads.length === 0) return;
+  const willCollapse = !heads[0].classList.contains('collapsed');
+  heads.forEach(h => {
+    h.classList.toggle('collapsed', willCollapse);
+    const btn = h.querySelector('.collapse-toggle');
+    if (btn) {
+      btn.textContent = willCollapse ? '+' : '−';
+      btn.setAttribute('aria-label', willCollapse ? t('ariaExpand') : t('ariaCollapse'));
+    }
+  });
+  cells.forEach(c => c.classList.toggle('collapsed', willCollapse));
+}
+
+function escapeHtml(s) {
+  if (s === null || s === undefined) return '';
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function setLanguage(lang) {
+  if (lang !== 'de' && lang !== 'en') return;
+  if (lang === currentLang) return;
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+  // Loading-Label (falls noch nicht geladen)
+  const loadingP = document.querySelector('.loading p');
+  if (loadingP) loadingP.textContent = t('loading');
+  if (cachedData) renderApp(cachedData);
+}
+
+// Sprach-Switch-Handler
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
+});
+
+// Layout-Wechsel Desktop <-> Mobil neu rendern (Filter bleiben erhalten)
+function onLayoutChange() {
+  if (mobileMQ.matches === isMobile) return;
+  isMobile = mobileMQ.matches;
+  if (cachedData) renderApp(cachedData);
+}
+if (mobileMQ.addEventListener) mobileMQ.addEventListener('change', onLayoutChange);
+else mobileMQ.addListener(onLayoutChange);
+
+function loadJson(url) {
+  return fetch(url).then(r => {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  });
+}
+
+// Lokale Kopie rendern, danach still gegen das Metadaten-Repo abgleichen.
+loadJson(DATA_URL)
+  .then(data => {
+    renderApp(data);
+    loadJson(DATA_URL_REMOTE)
+      .then(fresh => {
+        if (fresh && fresh.data_version !== data.data_version) renderApp(fresh);
+      })
+      .catch(() => { /* 429 oder offline: lokale Kopie bleibt stehen */ });
+  })
+  .catch(err => {
+    // Lokale Kopie fehlt: als letzte Rettung direkt das Repo versuchen.
+    loadJson(DATA_URL_REMOTE)
+      .then(renderApp)
+      .catch(err2 => {
+        document.getElementById('app').innerHTML = `
+          <div class="error">
+            ${t('errorPrefix')} ${escapeHtml(err.message)} / ${escapeHtml(err2.message)}<br><br>
+            URL: ${DATA_URL}<br>
+            ${t('errorHint')}
+          </div>
+        `;
+      });
+  });
+</script>
+
+<script src="assets/i18n.js"></script>
+
+</body></html>
